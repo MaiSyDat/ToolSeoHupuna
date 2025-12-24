@@ -15,6 +15,8 @@
         var isScanning = false;
         var scanQueue = [];
         var totalStepsInitial = 0;
+        var maxRetries = 3;
+        var retryCount = 0;
         
         // Pagination & Tabs
         var currentTab = 'grouped';
@@ -23,6 +25,11 @@
         
         // --- Core Scanning Logic ---
         
+        /**
+         * Build scan queue from available post types.
+         *
+         * @return {Array} Queue of scan tasks.
+         */
         function buildScanQueue() {
             var queue = [];
             
@@ -37,25 +44,39 @@
                     step: 'post_type',
                     sub_step: type,
                     page: 1,
-                    label: 'Scanning Post Type: ' + type
+                    label: hupunaEls.strings.scanningPostType.replace('%s', type)
                 });
             });
             
             // 2. Comments
-            queue.push({ step: 'comment', page: 1, label: 'Scanning Comments...' });
+            queue.push({ 
+                step: 'comment', 
+                page: 1, 
+                label: hupunaEls.strings.scanningComments 
+            });
             
             // 3. Options
-            queue.push({ step: 'option', page: 1, label: 'Scanning Options...' });
+            queue.push({ 
+                step: 'option', 
+                page: 1, 
+                label: hupunaEls.strings.scanningOptions 
+            });
             
             return queue;
         }
         
+        /**
+         * Handle scan button click.
+         */
         $scanButton.on('click', function() {
-            if (isScanning) return;
+            if (isScanning) {
+                return;
+            }
             
             isScanning = true;
             allResults = [];
-            $scanButton.prop('disabled', true).text('Scanning...');
+            retryCount = 0;
+            $scanButton.prop('disabled', true).html('<span class="dashicons dashicons-search"></span> ' + hupunaEls.strings.scanning);
             $results.hide();
             $progressWrap.show();
             
@@ -65,6 +86,9 @@
             processQueue();
         });
         
+        /**
+         * Process scan queue recursively with error handling.
+         */
         function processQueue() {
             if (scanQueue.length === 0) {
                 finishScan();
@@ -73,13 +97,17 @@
             
             var currentTask = scanQueue[0];
             var progressPercent = 100 - ((scanQueue.length / totalStepsInitial) * 100);
-            if (progressPercent < 2) progressPercent = 2;
+            if (progressPercent < 2) {
+                progressPercent = 2;
+            }
             
-            updateProgress(progressPercent, currentTask.label + ' (Page ' + currentTask.page + ')');
+            var progressText = currentTask.label + ' (' + hupunaEls.strings.page + ' ' + currentTask.page + ')';
+            updateProgress(progressPercent, progressText);
             
             $.ajax({
                 url: hupunaEls.ajaxUrl,
                 type: 'POST',
+                timeout: 60000, // 60 second timeout
                 data: {
                     action: 'hupuna_scan_batch',
                     nonce: hupunaEls.nonce,
@@ -88,6 +116,8 @@
                     page: currentTask.page
                 },
                 success: function(response) {
+                    retryCount = 0; // Reset retry count on success
+                    
                     if (response.success) {
                         if (response.data.results && response.data.results.length > 0) {
                             allResults = allResults.concat(response.data.results);
@@ -99,40 +129,70 @@
                             scanQueue[0].page++; // Next page
                         }
                         
-                        processQueue(); // Recursive call
+                        // Use setTimeout to prevent browser hang
+                        setTimeout(function() {
+                            processQueue();
+                        }, 10);
                         
                     } else {
-                        handleError(response.data.message);
+                        handleError(response.data.message || hupunaEls.strings.error);
                     }
                 },
                 error: function(xhr, status, error) {
-                    handleError('Server connection failed: ' + error);
+                    // Retry logic for transient errors
+                    if (retryCount < maxRetries && (status === 'timeout' || xhr.status === 0)) {
+                        retryCount++;
+                        setTimeout(function() {
+                            processQueue();
+                        }, 1000 * retryCount); // Exponential backoff
+                        return;
+                    }
+                    
+                    var errorMsg = hupunaEls.strings.serverError.replace('%s', error || status);
+                    handleError(errorMsg);
                 }
             });
         }
         
+        /**
+         * Handle scan errors.
+         *
+         * @param {string} msg Error message.
+         */
         function handleError(msg) {
             console.error('Scan Error:', msg);
-            alert('Error: ' + msg);
+            alert(hupunaEls.strings.error + ': ' + msg);
             isScanning = false;
-            $scanButton.prop('disabled', false).text('Start Scan');
-            $progressText.text('Error encountered.');
+            $scanButton.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + hupunaEls.strings.startScan);
+            $progressText.text(hupunaEls.strings.errorEncountered);
         }
         
+        /**
+         * Update progress bar and text.
+         *
+         * @param {number} percent Progress percentage.
+         * @param {string} text Progress text.
+         */
         function updateProgress(percent, text) {
             $progressFill.css('width', percent + '%');
             $progressText.text(text);
         }
         
+        /**
+         * Finish scan and display results.
+         */
         function finishScan() {
             isScanning = false;
-            updateProgress(100, 'Scan Completed!');
-            $scanButton.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> Start Scan');
+            updateProgress(100, hupunaEls.strings.scanCompleted);
+            $scanButton.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + hupunaEls.strings.startScan);
             displayResults(allResults);
         }
 
         // --- UI & Display Logic ---
         
+        /**
+         * Handle tab button clicks.
+         */
         $('.tab-button').on('click', function() {
             $('.tab-button').removeClass('active');
             $(this).addClass('active');
@@ -141,6 +201,11 @@
             renderCurrentPage();
         });
         
+        /**
+         * Display scan results.
+         *
+         * @param {Array} data Results data.
+         */
         function displayResults(data) {
             window.rawResults = data;
             
@@ -160,6 +225,9 @@
             renderCurrentPage();
         }
         
+        /**
+         * Render current page of results.
+         */
         function renderCurrentPage() {
             var html = '';
             var list = [];
@@ -171,7 +239,7 @@
             }
             
             if (list.length === 0) {
-                $resultsContent.html('<div class="hupuna-no-results">No external links found. Great job!</div>');
+                $resultsContent.html('<div class="hupuna-no-results">' + escapeHtml(hupunaEls.strings.noLinksFound) + '</div>');
                 return;
             }
             
@@ -201,38 +269,71 @@
             // Render Pagination
             if (totalPages > 1) {
                 html += '<div class="hupuna-pagination">';
-                if (currentPage > 1) html += '<button class="button" onclick="window.changeHupunaPage('+(currentPage-1)+')">&laquo; Prev</button>';
-                html += '<span>Page ' + currentPage + ' of ' + totalPages + '</span>';
-                if (currentPage < totalPages) html += '<button class="button" onclick="window.changeHupunaPage('+(currentPage+1)+')">Next &raquo;</button>';
+                if (currentPage > 1) {
+                    html += '<button class="button" onclick="window.changeHupunaPage(' + (currentPage - 1) + ')">' + escapeHtml(hupunaEls.strings.prev) + '</button>';
+                }
+                html += '<span>' + hupunaEls.strings.page + ' ' + currentPage + ' ' + hupunaEls.strings.of + ' ' + totalPages + '</span>';
+                if (currentPage < totalPages) {
+                    html += '<button class="button" onclick="window.changeHupunaPage(' + (currentPage + 1) + ')">' + escapeHtml(hupunaEls.strings.next) + '</button>';
+                }
                 html += '</div>';
             }
             
             $resultsContent.html(html);
         }
         
+        /**
+         * Render individual result item row.
+         *
+         * @param {Object} item Result item.
+         * @return {string} HTML string.
+         */
         function renderItemRow(item) {
+            var locationText = escapeHtml(hupunaEls.strings.location) + ' ' + escapeHtml(item.location);
+            var tagText = escapeHtml(hupunaEls.strings.tag) + ' &lt;' + escapeHtml(item.tag) + '&gt;';
+            
             return '<div class="hupuna-link-item">' +
-                   '<span class="hupuna-link-item-type ' + item.type + '">' + item.type + '</span> ' +
+                   '<span class="hupuna-link-item-type ' + escapeHtml(item.type) + '">' + escapeHtml(item.type) + '</span> ' +
                    '<div class="info">' +
                        '<div class="title">' + escapeHtml(item.title) + '</div>' +
-                       '<div class="meta">Location: ' + item.location + ' | Tag: &lt;' + item.tag + '&gt;</div>' +
+                       '<div class="meta">' + locationText + ' | ' + tagText + '</div>' +
                    '</div>' +
                    '<div class="actions">' +
-                       (item.edit_url ? '<a href="' + item.edit_url + '" target="_blank" class="button button-small">Edit</a>' : '') +
-                       (item.view_url ? '<a href="' + item.view_url + '" target="_blank" class="button button-small">View</a>' : '') +
+                       (item.edit_url ? '<a href="' + escapeHtml(item.edit_url) + '" target="_blank" class="button button-small">' + escapeHtml(hupunaEls.strings.edit) + '</a>' : '') +
+                       (item.view_url ? '<a href="' + escapeHtml(item.view_url) + '" target="_blank" class="button button-small">' + escapeHtml(hupunaEls.strings.view) + '</a>' : '') +
                    '</div>' +
                    '</div>';
         }
         
+        /**
+         * Global function to change page.
+         *
+         * @param {number} page Page number.
+         */
         window.changeHupunaPage = function(page) {
             currentPage = page;
             renderCurrentPage();
         };
         
+        /**
+         * Escape HTML to prevent XSS.
+         *
+         * @param {string} text Text to escape.
+         * @return {string} Escaped text.
+         */
         function escapeHtml(text) {
-            if (!text) return '';
+            if (!text) {
+                return '';
+            }
+            var map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
             return text.replace(/[&<>"']/g, function(m) { 
-                return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[m]; 
+                return map[m]; 
             });
         }
     });
