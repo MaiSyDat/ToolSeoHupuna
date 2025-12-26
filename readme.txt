@@ -1,59 +1,55 @@
-=== Hupuna External Link Scanner ===
-Contributors: MaiSyDat
-Tags: links, scanner, external links, seo, audit, security
+=== Tool SEO Hupuna ===
+Contributors: maisydat
+Tags: seo, links, scanner, external links, product manager, price manager, woocommerce, audit, content management
 Requires at least: 5.8
-Tested up to: 6.9
-Stable tag: 2.0.0
+Tested up to: 6.4
+Stable tag: 2.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Scans your entire WordPress website for external links. Optimized for large databases with efficient batch processing.
+Comprehensive SEO tools including external link scanner, posts with links manager, and WooCommerce product price manager.
 
 == Description ==
 
-Hupuna External Link Scanner is a powerful tool that helps you identify all external links across your WordPress website. It scans posts, pages, comments, and options to find every external link, making it perfect for SEO audits, security reviews, and content management.
+Tool SEO Hupuna is a powerful WordPress plugin that provides comprehensive SEO and content management tools. It includes three main features: external link scanner, posts with links manager, and WooCommerce product price manager.
 
 = Key Features =
 
-* **Comprehensive Scanning**: Scans posts, pages, comments, and WordPress options
-* **Batch Processing**: Optimized for large databases with efficient batch processing to prevent timeouts
+* **External Link Scanner**: Scans your entire WordPress website for external links across posts, pages, comments, and options
+* **Posts with Links Manager**: Manage and edit internal links (products, categories, posts) in your content
+* **WooCommerce Product Price Manager**: Bulk edit product prices and names directly from admin panel
+* **Batch Processing**: Optimized for large databases with efficient batch processing
 * **Smart Filtering**: Automatically excludes system domains (WordPress.org, WooCommerce, Gravatar, etc.)
-* **Detailed Results**: Shows link location, tag type, and provides quick edit/view links
-* **User-Friendly Interface**: Clean admin interface with progress indicators and organized results
+* **WordPress Default UI**: Clean, native WordPress admin interface
 * **Performance Optimized**: Handles large websites without performance issues
 
-= How It Works =
+= External Link Scanner =
 
-1. Navigate to **Link Scanner** in your WordPress admin menu
-2. Click **Start Scan** to begin scanning your website
-3. The plugin processes your content in batches to ensure smooth operation
-4. View results grouped by URL or see all occurrences
-5. Click edit/view links to quickly access content containing external links
-
-= What Gets Scanned =
-
+Scans your entire website for external links:
 * All public post types (posts, pages, custom post types)
 * Post content and excerpts
 * Comments
 * WordPress options (excluding transients and system options)
 
-= What Gets Excluded =
+Results can be viewed grouped by URL or as all occurrences, with quick edit/view links.
 
-The plugin automatically excludes links to:
-* WordPress.org domains
-* WooCommerce domains
-* Gravatar domains
-* Your own website domain
+= Posts with Links Manager =
 
-You can also filter the whitelist using the `hupuna_els_whitelist` filter hook.
+Manage internal links in your content:
+* Find posts containing specific URLs
+* Edit and update links directly from admin panel
+* Supports products, product categories, and posts
+* Works with all post types
 
-= Use Cases =
+= WooCommerce Product Price Manager =
 
-* **SEO Audits**: Identify all external links for SEO analysis
-* **Security Reviews**: Find external links that may need review
-* **Content Management**: Track where external links are used across your site
-* **Link Building**: Discover existing external link patterns
+Bulk manage WooCommerce products:
+* Edit product names inline
+* Update regular and sale prices
+* Support for simple and variable products
+* Save all variants at once
+* Search products by name
 
 == Installation ==
 
@@ -61,54 +57,64 @@ You can also filter the whitelist using the `hupuna_els_whitelist` filter hook.
 
 1. Log in to your WordPress admin panel
 2. Navigate to Plugins → Add New
-3. Search for "Hupuna External Link Scanner"
+3. Search for "Tool SEO Hupuna"
 4. Click "Install Now" and then "Activate"
 
 = Manual Installation =
 
-1. Upload the `hupuna-external-link-scanner` folder to `/wp-content/plugins/`
+1. Upload the `tool-seo-hupuna` folder to `/wp-content/plugins/`
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Navigate to Link Scanner in the admin menu to start using
+3. Navigate to Tool SEO in the admin menu to start using
 
 == Frequently Asked Questions ==
 
 = Does this plugin slow down my website? =
 
-No. The plugin only runs when you manually trigger a scan from the admin panel. It uses efficient batch processing to handle large databases without impacting site performance.
+No. The plugin only runs when you manually trigger actions from the admin panel. It uses efficient batch processing to handle large databases without impacting site performance.
 
 = What happens if I have a very large website? =
 
 The plugin uses batch processing to handle websites of any size. It processes content in small batches to prevent server timeouts and ensure smooth operation.
 
-= Can I customize which domains are excluded? =
+= Can I customize which domains are excluded from scanning? =
 
-Yes. You can use the `hupuna_els_whitelist` filter to customize the list of excluded domains.
+Yes. You can use the `tool_seo_hupuna_whitelist` filter to customize the list of excluded domains.
 
-= Does the plugin scan private or draft content? =
+= Does the plugin require WooCommerce? =
 
-Yes, the plugin scans all post statuses to give you a complete picture of external links in your content.
+The External Link Scanner and Posts with Links Manager work without WooCommerce. The Product Price Manager requires WooCommerce to be installed and activated.
 
-= Can I export the scan results? =
+= Can I edit product prices in bulk? =
 
-Currently, results are displayed in the admin interface. Export functionality may be added in future versions.
+Yes. The Product Price Manager allows you to edit multiple product prices at once, including all variants of variable products.
 
 == Screenshots ==
 
-1. Main scanning interface with progress indicator
-2. Results grouped by URL for easy review
-3. Detailed view showing all link occurrences
+1. External Link Scanner interface
+2. Posts with Links Manager
+3. Product Price Manager
 
 == Changelog ==
 
+= 2.1.1 =
+* Renamed plugin to Tool SEO Hupuna
+* Added Posts with Links Manager feature
+* Added WooCommerce Product Price Manager feature
+* Improved UI with WordPress default styles
+* Removed emoji icons
+* Updated all text domains and constants
+
 = 2.0.0 =
 * Initial release
-* Batch processing for large databases
+* External link scanner with batch processing
 * Comprehensive scanning of posts, comments, and options
 * Smart domain filtering
-* User-friendly admin interface
 
 == Upgrade Notice ==
 
+= 2.1.1 =
+Major update: Added Posts with Links Manager and Product Price Manager features. Improved UI and renamed to Tool SEO Hupuna.
+
 = 2.0.0 =
-Initial release of Hupuna External Link Scanner.
+Initial release of Tool SEO Hupuna.
 

@@ -38,7 +38,7 @@ class Hupuna_External_Link_Scanner_Admin {
 	public function init() {
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
-		add_action( 'wp_ajax_hupuna_scan_batch', array( $this, 'ajax_scan_batch' ) );
+		add_action( 'wp_ajax_tool_seo_hupuna_scan_batch', array( $this, 'ajax_scan_batch' ) );
 	}
 
 	/**
@@ -48,12 +48,12 @@ class Hupuna_External_Link_Scanner_Admin {
 	 */
 	public function add_admin_menu() {
 		add_menu_page(
-			__( 'Hupuna Link Scanner', 'hupuna-external-link-scanner' ),
-			__( 'Link Scanner', 'hupuna-external-link-scanner' ),
+			__( 'Tool SEO Hupuna', 'tool-seo-hupuna' ),
+			__( 'Tool SEO', 'tool-seo-hupuna' ),
 			'manage_options',
-			'hupuna-scan-links',
+			'tool-seo-hupuna',
 			array( $this, 'render_admin_page' ),
-			'dashicons-admin-links',
+			'dashicons-admin-tools',
 			30
 		);
 	}
@@ -65,59 +65,59 @@ class Hupuna_External_Link_Scanner_Admin {
 	 * @return void
 	 */
 	public function enqueue_admin_assets( $hook ) {
-		if ( 'toplevel_page_hupuna-scan-links' !== $hook ) {
+		if ( 'toplevel_page_tool-seo-hupuna' !== $hook ) {
 			return;
 		}
 
 		wp_enqueue_style(
-			'hupuna-els-admin',
-			HUPUNA_ELS_PLUGIN_URL . 'assets/css/admin.css',
+			'tool-seo-hupuna-admin',
+			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/css/admin.css',
 			array(),
-			HUPUNA_ELS_VERSION
+			TOOL_SEO_HUPUNA_VERSION
 		);
 
 		wp_enqueue_script(
-			'hupuna-els-admin',
-			HUPUNA_ELS_PLUGIN_URL . 'assets/js/admin.js',
+			'tool-seo-hupuna-admin',
+			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/js/admin.js',
 			array( 'jquery' ),
-			HUPUNA_ELS_VERSION,
+			TOOL_SEO_HUPUNA_VERSION,
 			true
 		);
 
 		wp_localize_script(
-			'hupuna-els-admin',
-			'hupunaEls',
+			'tool-seo-hupuna-admin',
+			'toolSeoHupuna',
 			array(
 				'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
-				'nonce'     => wp_create_nonce( 'hupuna_scan_links_nonce' ),
+				'nonce'     => wp_create_nonce( 'tool_seo_hupuna_scan_links_nonce' ),
 				'postTypes' => $this->scanner->get_scannable_post_types(),
 				'strings'   => array(
-					'scanning'        => __( 'Scanning...', 'hupuna-external-link-scanner' ),
-					'scanCompleted'   => __( 'Scan Completed!', 'hupuna-external-link-scanner' ),
-					'startScan'       => __( 'Start Scan', 'hupuna-external-link-scanner' ),
-					'initializing'    => __( 'Initializing...', 'hupuna-external-link-scanner' ),
-					'errorEncountered' => __( 'Error encountered.', 'hupuna-external-link-scanner' ),
-					'scanningPostType' => __( 'Scanning Post Type: %s', 'hupuna-external-link-scanner' ),
-					'scanningComments' => __( 'Scanning Comments...', 'hupuna-external-link-scanner' ),
-					'scanningOptions'  => __( 'Scanning Options...', 'hupuna-external-link-scanner' ),
-					'page'             => __( 'Page', 'hupuna-external-link-scanner' ),
-					'error'            => __( 'Error', 'hupuna-external-link-scanner' ),
-					'serverError'      => __( 'Server connection failed: %s', 'hupuna-external-link-scanner' ),
-					'accessDenied'     => __( 'Access denied', 'hupuna-external-link-scanner' ),
-					'noLinksFound'    => __( 'No external links found. Great job!', 'hupuna-external-link-scanner' ),
-					'totalLinksFound' => __( 'Total Links Found:', 'hupuna-external-link-scanner' ),
-					'uniqueUrls'      => __( 'Unique URLs:', 'hupuna-external-link-scanner' ),
-					'groupedByUrl'    => __( 'Grouped by URL', 'hupuna-external-link-scanner' ),
-					'allOccurrences'  => __( 'All Occurrences', 'hupuna-external-link-scanner' ),
-					'currentDomain'   => __( 'Current Domain:', 'hupuna-external-link-scanner' ),
-					'description'     => __( 'Scans posts, pages, comments, and options for external links. System domains (WordPress, WooCommerce, Gravatar) and patterns are automatically ignored.', 'hupuna-external-link-scanner' ),
-					'location'        => __( 'Location:', 'hupuna-external-link-scanner' ),
-					'tag'             => __( 'Tag:', 'hupuna-external-link-scanner' ),
-					'edit'            => __( 'Edit', 'hupuna-external-link-scanner' ),
-					'view'            => __( 'View', 'hupuna-external-link-scanner' ),
-					'prev'            => __( '&laquo; Prev', 'hupuna-external-link-scanner' ),
-					'next'            => __( 'Next &raquo;', 'hupuna-external-link-scanner' ),
-					'of'              => __( 'of', 'hupuna-external-link-scanner' ),
+					'scanning'        => __( 'Scanning...', 'tool-seo-hupuna' ),
+					'scanCompleted'   => __( 'Scan Completed!', 'tool-seo-hupuna' ),
+					'startScan'       => __( 'Start Scan', 'tool-seo-hupuna' ),
+					'initializing'    => __( 'Initializing...', 'tool-seo-hupuna' ),
+					'errorEncountered' => __( 'Error encountered.', 'tool-seo-hupuna' ),
+					'scanningPostType' => __( 'Scanning Post Type: %s', 'tool-seo-hupuna' ),
+					'scanningComments' => __( 'Scanning Comments...', 'tool-seo-hupuna' ),
+					'scanningOptions'  => __( 'Scanning Options...', 'tool-seo-hupuna' ),
+					'page'             => __( 'Page', 'tool-seo-hupuna' ),
+					'error'            => __( 'Error', 'tool-seo-hupuna' ),
+					'serverError'      => __( 'Server connection failed: %s', 'tool-seo-hupuna' ),
+					'accessDenied'     => __( 'Access denied', 'tool-seo-hupuna' ),
+					'noLinksFound'    => __( 'No external links found. Great job!', 'tool-seo-hupuna' ),
+					'totalLinksFound' => __( 'Total Links Found:', 'tool-seo-hupuna' ),
+					'uniqueUrls'      => __( 'Unique URLs:', 'tool-seo-hupuna' ),
+					'groupedByUrl'    => __( 'Grouped by URL', 'tool-seo-hupuna' ),
+					'allOccurrences'  => __( 'All Occurrences', 'tool-seo-hupuna' ),
+					'currentDomain'   => __( 'Current Domain:', 'tool-seo-hupuna' ),
+					'description'     => __( 'Scans posts, pages, comments, and options for external links. System domains (WordPress, WooCommerce, Gravatar) and patterns are automatically ignored.', 'tool-seo-hupuna' ),
+					'location'        => __( 'Location:', 'tool-seo-hupuna' ),
+					'tag'             => __( 'Tag:', 'tool-seo-hupuna' ),
+					'edit'            => __( 'Edit', 'tool-seo-hupuna' ),
+					'view'            => __( 'View', 'tool-seo-hupuna' ),
+					'prev'            => __( '&laquo; Prev', 'tool-seo-hupuna' ),
+					'next'            => __( 'Next &raquo;', 'tool-seo-hupuna' ),
+					'of'              => __( 'of', 'tool-seo-hupuna' ),
 				),
 			)
 		);
@@ -133,13 +133,13 @@ class Hupuna_External_Link_Scanner_Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Access denied', 'hupuna-external-link-scanner' ),
+					'message' => __( 'Access denied', 'tool-seo-hupuna' ),
 				)
 			);
 		}
 
 		// Verify nonce.
-		check_ajax_referer( 'hupuna_scan_links_nonce', 'nonce' );
+		check_ajax_referer( 'tool_seo_hupuna_scan_links_nonce', 'nonce' );
 
 		// Prevent timeout.
 		if ( function_exists( 'set_time_limit' ) ) {
@@ -194,56 +194,56 @@ class Hupuna_External_Link_Scanner_Admin {
 	 */
 	public function render_admin_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'hupuna-external-link-scanner' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'tool-seo-hupuna' ) );
 		}
 
 		?>
-		<div class="wrap hupuna-els-wrap">
-			<h1><?php echo esc_html__( 'Hupuna External Link Scanner', 'hupuna-external-link-scanner' ); ?></h1>
+		<div class="wrap">
+			<h1><?php echo esc_html__( 'External Link Scanner', 'tool-seo-hupuna' ); ?></h1>
 
-			<div class="hupuna-els-header">
+			<div class="card">
 				<p>
-					<strong><?php echo esc_html__( 'Current Domain:', 'hupuna-external-link-scanner' ); ?></strong>
+					<strong><?php echo esc_html__( 'Current Domain:', 'tool-seo-hupuna' ); ?></strong>
 					<code><?php echo esc_html( home_url() ); ?></code>
 				</p>
 				<p class="description">
-					<?php echo esc_html__( 'Scans posts, pages, comments, and options for external links. System domains (WordPress, WooCommerce, Gravatar) and patterns are automatically ignored.', 'hupuna-external-link-scanner' ); ?>
+					<?php echo esc_html__( 'Scans posts, pages, comments, and options for external links. System domains (WordPress, WooCommerce, Gravatar) and patterns are automatically ignored.', 'tool-seo-hupuna' ); ?>
 				</p>
 			</div>
 
-			<div class="hupuna-els-actions">
-				<button type="button" id="hupuna-scan-button" class="button button-primary button-large">
-					<span class="dashicons dashicons-search"></span> <?php echo esc_html__( 'Start Scan', 'hupuna-external-link-scanner' ); ?>
+			<div style="margin: 20px 0;">
+				<button type="button" id="tool-seo-hupuna-scan-button" class="button button-primary button-large">
+					<span class="dashicons dashicons-search"></span> <?php echo esc_html__( 'Start Scan', 'tool-seo-hupuna' ); ?>
 				</button>
 
-				<div id="hupuna-progress-wrap" style="display:none;">
-					<div class="hupuna-progress-bar">
-						<div class="hupuna-progress-fill" style="width: 0%"></div>
+				<div id="tool-seo-hupuna-progress-wrap" style="display:none; margin-top: 20px;">
+					<div style="background: #f0f0f1; border-radius: 4px; height: 30px; overflow: hidden;">
+						<div id="tool-seo-hupuna-progress-fill" style="background: #2271b1; height: 100%; width: 0%; transition: width 0.3s;"></div>
 					</div>
-					<div id="hupuna-progress-text"><?php echo esc_html__( 'Initializing...', 'hupuna-external-link-scanner' ); ?></div>
+					<div id="tool-seo-hupuna-progress-text" style="margin-top: 10px;"><?php echo esc_html__( 'Initializing...', 'tool-seo-hupuna' ); ?></div>
 				</div>
 			</div>
 
-			<div id="hupuna-scan-results" class="hupuna-scan-results" style="display: none;">
-				<div class="hupuna-results-summary">
+			<div id="tool-seo-hupuna-scan-results" style="display: none;">
+				<div class="card" style="margin-bottom: 20px;">
 					<p>
-						<strong><?php echo esc_html__( 'Total Links Found:', 'hupuna-external-link-scanner' ); ?></strong>
+						<strong><?php echo esc_html__( 'Total Links Found:', 'tool-seo-hupuna' ); ?></strong>
 						<span id="total-links">0</span> |
-						<strong><?php echo esc_html__( 'Unique URLs:', 'hupuna-external-link-scanner' ); ?></strong>
+						<strong><?php echo esc_html__( 'Unique URLs:', 'tool-seo-hupuna' ); ?></strong>
 						<span id="unique-links">0</span>
 					</p>
 				</div>
 
-				<div class="hupuna-results-tabs">
-					<button class="tab-button active" data-tab="grouped">
-						<?php echo esc_html__( 'Grouped by URL', 'hupuna-external-link-scanner' ); ?>
+				<div class="nav-tab-wrapper" style="margin-bottom: 20px;">
+					<button class="nav-tab nav-tab-active" data-tab="grouped">
+						<?php echo esc_html__( 'Grouped by URL', 'tool-seo-hupuna' ); ?>
 					</button>
-					<button class="tab-button" data-tab="all">
-						<?php echo esc_html__( 'All Occurrences', 'hupuna-external-link-scanner' ); ?>
+					<button class="nav-tab" data-tab="all">
+						<?php echo esc_html__( 'All Occurrences', 'tool-seo-hupuna' ); ?>
 					</button>
 				</div>
 
-				<div id="hupuna-results-content" class="hupuna-results-content"></div>
+				<div id="tool-seo-hupuna-results-content"></div>
 			</div>
 		</div>
 		<?php

@@ -3,12 +3,12 @@
     
     $(document).ready(function() {
         // Elements
-        var $scanButton = $('#hupuna-scan-button');
-        var $progressWrap = $('#hupuna-progress-wrap');
-        var $progressFill = $('.hupuna-progress-fill');
-        var $progressText = $('#hupuna-progress-text');
-        var $results = $('#hupuna-scan-results');
-        var $resultsContent = $('#hupuna-results-content');
+        var $scanButton = $('#tool-seo-hupuna-scan-button');
+        var $progressWrap = $('#tool-seo-hupuna-progress-wrap');
+        var $progressFill = $('#tool-seo-hupuna-progress-fill');
+        var $progressText = $('#tool-seo-hupuna-progress-text');
+        var $results = $('#tool-seo-hupuna-scan-results');
+        var $resultsContent = $('#tool-seo-hupuna-results-content');
         
         // State
         var allResults = [];
@@ -34,7 +34,7 @@
             var queue = [];
             
             // 1. Post Types
-            var postTypes = hupunaEls.postTypes; 
+            var postTypes = toolSeoHupuna.postTypes; 
             if (!Array.isArray(postTypes)) {
                 postTypes = Object.values(postTypes);
             }
@@ -44,7 +44,7 @@
                     step: 'post_type',
                     sub_step: type,
                     page: 1,
-                    label: hupunaEls.strings.scanningPostType.replace('%s', type)
+                    label: toolSeoHupuna.strings.scanningPostType.replace('%s', type)
                 });
             });
             
@@ -52,14 +52,14 @@
             queue.push({ 
                 step: 'comment', 
                 page: 1, 
-                label: hupunaEls.strings.scanningComments 
+                label: toolSeoHupuna.strings.scanningComments 
             });
             
             // 3. Options
             queue.push({ 
                 step: 'option', 
                 page: 1, 
-                label: hupunaEls.strings.scanningOptions 
+                label: toolSeoHupuna.strings.scanningOptions 
             });
             
             return queue;
@@ -76,7 +76,7 @@
             isScanning = true;
             allResults = [];
             retryCount = 0;
-            $scanButton.prop('disabled', true).html('<span class="dashicons dashicons-search"></span> ' + hupunaEls.strings.scanning);
+            $scanButton.prop('disabled', true).html('<span class="dashicons dashicons-search"></span> ' + toolSeoHupuna.strings.scanning);
             $results.hide();
             $progressWrap.show();
             
@@ -101,16 +101,16 @@
                 progressPercent = 2;
             }
             
-            var progressText = currentTask.label + ' (' + hupunaEls.strings.page + ' ' + currentTask.page + ')';
+            var progressText = currentTask.label + ' (' + toolSeoHupuna.strings.page + ' ' + currentTask.page + ')';
             updateProgress(progressPercent, progressText);
             
             $.ajax({
-                url: hupunaEls.ajaxUrl,
+                url: toolSeoHupuna.ajaxUrl,
                 type: 'POST',
                 timeout: 60000, // 60 second timeout
                 data: {
-                    action: 'hupuna_scan_batch',
-                    nonce: hupunaEls.nonce,
+                    action: 'tool_seo_hupuna_scan_batch',
+                    nonce: toolSeoHupuna.nonce,
                     step: currentTask.step,
                     sub_step: currentTask.sub_step || '',
                     page: currentTask.page
@@ -135,7 +135,7 @@
                         }, 10);
                         
                     } else {
-                        handleError(response.data.message || hupunaEls.strings.error);
+                        handleError(response.data.message || toolSeoHupuna.strings.error);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -148,7 +148,7 @@
                         return;
                     }
                     
-                    var errorMsg = hupunaEls.strings.serverError.replace('%s', error || status);
+                    var errorMsg = toolSeoHupuna.strings.serverError.replace('%s', error || status);
                     handleError(errorMsg);
                 }
             });
@@ -161,10 +161,10 @@
          */
         function handleError(msg) {
             console.error('Scan Error:', msg);
-            alert(hupunaEls.strings.error + ': ' + msg);
+            alert(toolSeoHupuna.strings.error + ': ' + msg);
             isScanning = false;
-            $scanButton.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + hupunaEls.strings.startScan);
-            $progressText.text(hupunaEls.strings.errorEncountered);
+            $scanButton.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + toolSeoHupuna.strings.startScan);
+            $progressText.text(toolSeoHupuna.strings.errorEncountered);
         }
         
         /**
@@ -183,8 +183,8 @@
          */
         function finishScan() {
             isScanning = false;
-            updateProgress(100, hupunaEls.strings.scanCompleted);
-            $scanButton.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + hupunaEls.strings.startScan);
+            updateProgress(100, toolSeoHupuna.strings.scanCompleted);
+            $scanButton.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + toolSeoHupuna.strings.startScan);
             displayResults(allResults);
         }
 
@@ -193,9 +193,9 @@
         /**
          * Handle tab button clicks.
          */
-        $('.tab-button').on('click', function() {
-            $('.tab-button').removeClass('active');
-            $(this).addClass('active');
+        $('.nav-tab').on('click', function() {
+            $('.nav-tab').removeClass('nav-tab-active');
+            $(this).addClass('nav-tab-active');
             currentTab = $(this).data('tab');
             currentPage = 1;
             renderCurrentPage();
@@ -239,7 +239,7 @@
             }
             
             if (list.length === 0) {
-                $resultsContent.html('<div class="hupuna-no-results">' + escapeHtml(hupunaEls.strings.noLinksFound) + '</div>');
+                $resultsContent.html('<div class="notice notice-info"><p>' + escapeHtml(toolSeoHupuna.strings.noLinksFound) + '</p></div>');
                 return;
             }
             
@@ -253,28 +253,33 @@
             // Render List
             if (currentTab === 'grouped') {
                 $.each(pageItems, function(i, group) {
-                    html += '<div class="hupuna-link-group">';
-                    html += '<div class="hupuna-link-group-header"><strong>' + escapeHtml(group.url) + '</strong> <span class="hupuna-link-count">' + group.occurrences.length + '</span></div>';
+                    html += '<div class="card" style="margin-bottom: 20px;">';
+                    html += '<h3>' + escapeHtml(group.url) + ' <span class="description">(' + group.occurrences.length + ' ' + (group.occurrences.length === 1 ? 'occurrence' : 'occurrences') + ')</span></h3>';
+                    html += '<table class="wp-list-table widefat fixed striped">';
+                    html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th>Actions</th></tr></thead><tbody>';
                     $.each(group.occurrences, function(j, item) {
                         html += renderItemRow(item);
                     });
-                    html += '</div>';
+                    html += '</tbody></table></div>';
                 });
             } else {
+                html += '<table class="wp-list-table widefat fixed striped">';
+                html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th>Actions</th></tr></thead><tbody>';
                 $.each(pageItems, function(i, item) {
                     html += renderItemRow(item);
                 });
+                html += '</tbody></table>';
             }
             
             // Render Pagination
             if (totalPages > 1) {
-                html += '<div class="hupuna-pagination">';
+                html += '<div style="margin-top: 20px; text-align: center;">';
                 if (currentPage > 1) {
-                    html += '<button class="button" onclick="window.changeHupunaPage(' + (currentPage - 1) + ')">' + escapeHtml(hupunaEls.strings.prev) + '</button>';
+                    html += '<button class="button" onclick="window.changeToolSeoHupunaPage(' + (currentPage - 1) + ')">' + escapeHtml(toolSeoHupuna.strings.prev) + '</button> ';
                 }
-                html += '<span>' + hupunaEls.strings.page + ' ' + currentPage + ' ' + hupunaEls.strings.of + ' ' + totalPages + '</span>';
+                html += '<span>' + toolSeoHupuna.strings.page + ' ' + currentPage + ' ' + toolSeoHupuna.strings.of + ' ' + totalPages + '</span>';
                 if (currentPage < totalPages) {
-                    html += '<button class="button" onclick="window.changeHupunaPage(' + (currentPage + 1) + ')">' + escapeHtml(hupunaEls.strings.next) + '</button>';
+                    html += ' <button class="button" onclick="window.changeToolSeoHupunaPage(' + (currentPage + 1) + ')">' + escapeHtml(toolSeoHupuna.strings.next) + '</button>';
                 }
                 html += '</div>';
             }
@@ -289,20 +294,16 @@
          * @return {string} HTML string.
          */
         function renderItemRow(item) {
-            var locationText = escapeHtml(hupunaEls.strings.location) + ' ' + escapeHtml(item.location);
-            var tagText = escapeHtml(hupunaEls.strings.tag) + ' &lt;' + escapeHtml(item.tag) + '&gt;';
-            
-            return '<div class="hupuna-link-item">' +
-                   '<span class="hupuna-link-item-type ' + escapeHtml(item.type) + '">' + escapeHtml(item.type) + '</span> ' +
-                   '<div class="info">' +
-                       '<div class="title">' + escapeHtml(item.title) + '</div>' +
-                       '<div class="meta">' + locationText + ' | ' + tagText + '</div>' +
-                   '</div>' +
-                   '<div class="actions">' +
-                       (item.edit_url ? '<a href="' + escapeHtml(item.edit_url) + '" target="_blank" class="button button-small">' + escapeHtml(hupunaEls.strings.edit) + '</a>' : '') +
-                       (item.view_url ? '<a href="' + escapeHtml(item.view_url) + '" target="_blank" class="button button-small">' + escapeHtml(hupunaEls.strings.view) + '</a>' : '') +
-                   '</div>' +
-                   '</div>';
+            return '<tr>' +
+                   '<td><code>' + escapeHtml(item.type) + '</code></td>' +
+                   '<td><strong>' + escapeHtml(item.title) + '</strong></td>' +
+                   '<td>' + escapeHtml(item.location) + '</td>' +
+                   '<td><code>&lt;' + escapeHtml(item.tag) + '&gt;</code></td>' +
+                   '<td>' +
+                       (item.edit_url ? '<a href="' + escapeHtml(item.edit_url) + '" target="_blank" class="button button-small">' + escapeHtml(toolSeoHupuna.strings.edit) + '</a> ' : '') +
+                       (item.view_url ? '<a href="' + escapeHtml(item.view_url) + '" target="_blank" class="button button-small">' + escapeHtml(toolSeoHupuna.strings.view) + '</a>' : '') +
+                   '</td>' +
+                   '</tr>';
         }
         
         /**
@@ -310,7 +311,7 @@
          *
          * @param {number} page Page number.
          */
-        window.changeHupunaPage = function(page) {
+        window.changeToolSeoHupunaPage = function(page) {
             currentPage = page;
             renderCurrentPage();
         };

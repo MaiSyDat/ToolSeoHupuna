@@ -3,7 +3,7 @@
  * Main Scanner Class
  * Handles logic for extracting, normalizing, and verifying external links.
  *
- * @package HupunaExternalLinkScanner
+ * @package ToolSeoHupuna
  */
 
 // If this file is called directly, abort.
@@ -80,9 +80,10 @@ class Hupuna_External_Link_Scanner {
 		/**
 		 * Filter the whitelist of domains to exclude from external link scanning.
 		 *
+		 * @since 2.1.1
 		 * @param array $whitelist Array of domain strings to whitelist.
 		 */
-		$whitelist = apply_filters( 'hupuna_els_whitelist', $whitelist );
+		$whitelist = apply_filters( 'tool_seo_hupuna_whitelist', $whitelist );
 
 		foreach ( $whitelist as $white ) {
 			if ( false !== strpos( $url_domain, $white ) ) {
@@ -215,14 +216,14 @@ class Hupuna_External_Link_Scanner {
 			// Scan Content.
 			$links = $this->extract_links( $post->post_content );
 			foreach ( $links as $link ) {
-				$results[] = $this->format_result( $link, $post_type, $post_id, $post->post_title, __( 'Content', 'hupuna-external-link-scanner' ) );
+				$results[] = $this->format_result( $link, $post_type, $post_id, $post->post_title, __( 'Content', 'tool-seo-hupuna' ) );
 			}
 
 			// Scan Excerpt.
 			if ( ! empty( $post->post_excerpt ) ) {
 				$links = $this->extract_links( $post->post_excerpt );
 				foreach ( $links as $link ) {
-					$results[] = $this->format_result( $link, $post_type, $post_id, $post->post_title, __( 'Excerpt', 'hupuna-external-link-scanner' ) );
+					$results[] = $this->format_result( $link, $post_type, $post_id, $post->post_title, __( 'Excerpt', 'tool-seo-hupuna' ) );
 				}
 			}
 		}
@@ -265,12 +266,12 @@ class Hupuna_External_Link_Scanner {
 				$results[] = array(
 					'type'       => 'comment',
 					'id'         => $comment->comment_ID,
-					'title'      => sprintf( __( 'Comment #%d', 'hupuna-external-link-scanner' ), $comment->comment_ID ),
+					'title'      => sprintf( __( 'Comment #%d', 'tool-seo-hupuna' ), $comment->comment_ID ),
 					'url'        => $link['url'],
 					'link_text'  => $link['text'],
 					'tag'        => $link['tag'],
 					'attribute'  => $link['attribute'],
-					'location'   => __( 'Content', 'hupuna-external-link-scanner' ),
+					'location'   => __( 'Content', 'tool-seo-hupuna' ),
 					'edit_url'   => get_edit_comment_link( $comment->comment_ID ),
 					'view_url'   => get_comment_link( $comment->comment_ID ),
 				);
@@ -338,12 +339,12 @@ class Hupuna_External_Link_Scanner {
 					$results[] = array(
 						'type'      => 'option',
 						'id'        => $option->option_name,
-						'title'     => sprintf( __( 'Option: %s', 'hupuna-external-link-scanner' ), $option->option_name ),
+						'title'     => sprintf( __( 'Option: %s', 'tool-seo-hupuna' ), $option->option_name ),
 						'url'       => $link['url'],
 						'link_text' => $link['text'],
 						'tag'       => $link['tag'],
 						'attribute' => $link['attribute'],
-						'location'  => __( 'Value', 'hupuna-external-link-scanner' ),
+						'location'  => __( 'Value', 'tool-seo-hupuna' ),
 						'edit_url'  => admin_url( 'options.php' ),
 						'view_url'  => home_url(),
 					);
