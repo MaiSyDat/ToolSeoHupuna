@@ -193,8 +193,8 @@
         /**
          * Handle tab button clicks.
          */
-        $('.nav-tab').on('click', function() {
-            $('.nav-tab').removeClass('nav-tab-active');
+        $('.tsh-tab').on('click', function() {
+            $('.tsh-tab').removeClass('nav-tab-active');
             $(this).addClass('nav-tab-active');
             currentTab = $(this).data('tab');
             currentPage = 1;
@@ -253,18 +253,18 @@
             // Render List
             if (currentTab === 'grouped') {
                 $.each(pageItems, function(i, group) {
-                    html += '<div class="card" style="margin-bottom: 20px;">';
+                    html += '<div class="card tsh-card" style="margin-bottom: 20px;">';
                     html += '<h3>' + escapeHtml(group.url) + ' <span class="description">(' + group.occurrences.length + ' ' + (group.occurrences.length === 1 ? 'occurrence' : 'occurrences') + ')</span></h3>';
-                    html += '<table class="wp-list-table widefat fixed striped">';
-                    html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th>Actions</th></tr></thead><tbody>';
+                    html += '<table class="wp-list-table widefat fixed striped tsh-table">';
+                    html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th style="width: 150px;">Actions</th></tr></thead><tbody>';
                     $.each(group.occurrences, function(j, item) {
                         html += renderItemRow(item);
                     });
                     html += '</tbody></table></div>';
                 });
             } else {
-                html += '<table class="wp-list-table widefat fixed striped">';
-                html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th>Actions</th></tr></thead><tbody>';
+                html += '<table class="wp-list-table widefat fixed striped tsh-table">';
+                html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th style="width: 150px;">Actions</th></tr></thead><tbody>';
                 $.each(pageItems, function(i, item) {
                     html += renderItemRow(item);
                 });
@@ -294,15 +294,24 @@
          * @return {string} HTML string.
          */
         function renderItemRow(item) {
+            var actionsHtml = '';
+            if (item.edit_url || item.view_url) {
+                actionsHtml = '<div style="display: flex; gap: 5px; flex-wrap: wrap;">';
+                if (item.edit_url) {
+                    actionsHtml += '<a href="' + escapeHtml(item.edit_url) + '" target="_blank" class="button button-small">' + escapeHtml(toolSeoHupuna.strings.edit) + '</a>';
+                }
+                if (item.view_url) {
+                    actionsHtml += '<a href="' + escapeHtml(item.view_url) + '" target="_blank" class="button button-small">' + escapeHtml(toolSeoHupuna.strings.view) + '</a>';
+                }
+                actionsHtml += '</div>';
+            }
+            
             return '<tr>' +
-                   '<td><code>' + escapeHtml(item.type) + '</code></td>' +
-                   '<td><strong>' + escapeHtml(item.title) + '</strong></td>' +
-                   '<td>' + escapeHtml(item.location) + '</td>' +
-                   '<td><code>&lt;' + escapeHtml(item.tag) + '&gt;</code></td>' +
-                   '<td>' +
-                       (item.edit_url ? '<a href="' + escapeHtml(item.edit_url) + '" target="_blank" class="button button-small">' + escapeHtml(toolSeoHupuna.strings.edit) + '</a> ' : '') +
-                       (item.view_url ? '<a href="' + escapeHtml(item.view_url) + '" target="_blank" class="button button-small">' + escapeHtml(toolSeoHupuna.strings.view) + '</a>' : '') +
-                   '</td>' +
+                   '<td style="padding:6px;"><code>' + escapeHtml(item.type) + '</code></td>' +
+                   '<td style="padding:6px;"><strong>' + escapeHtml(item.title) + '</strong></td>' +
+                   '<td style="padding:6px;">' + escapeHtml(item.location) + '</td>' +
+                   '<td style="padding:6px;"><code>&lt;' + escapeHtml(item.tag) + '&gt;</code></td>' +
+                   '<td style="padding:6px; white-space: nowrap;">' + actionsHtml + '</td>' +
                    '</tr>';
         }
         

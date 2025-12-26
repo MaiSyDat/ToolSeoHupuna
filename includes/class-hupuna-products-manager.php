@@ -3,7 +3,7 @@
  * Products Price Manager Class
  * Manages WooCommerce products and variants pricing.
  *
- * @package HupunaExternalLinkScanner
+ * @package ToolSeoHupuna
  */
 
 // If this file is called directly, abort.
@@ -73,15 +73,15 @@ class Hupuna_Products_Manager {
 
 		wp_enqueue_script( 'jquery' );
 		?>
-		<div class="wrap">
+		<div class="wrap tsh-wrap">
 			<h1><?php echo esc_html__( 'Product Price Manager', 'tool-seo-hupuna' ); ?></h1>
-			<div class="card" style="margin-bottom: 20px;">
+			<div class="card tsh-card" style="margin-bottom: 20px;">
 				<p style="margin: 0;">
-					<input type="text" id="search-input" class="regular-text" placeholder="<?php echo esc_attr__( 'Search products...', 'tool-seo-hupuna' ); ?>" style="width: calc(100% - 120px); max-width: 800px; margin-right: 10px;" />
-					<button id="search-btn" class="button button-primary"><?php echo esc_html__( 'Search', 'tool-seo-hupuna' ); ?></button>
+					<input type="text" id="tsh-products-search-input" class="regular-text" placeholder="<?php echo esc_attr__( 'Search products...', 'tool-seo-hupuna' ); ?>" style="width: calc(100% - 120px); max-width: 800px; margin-right: 10px;" />
+					<button id="tsh-products-search-btn" class="button button-primary"><?php echo esc_html__( 'Search', 'tool-seo-hupuna' ); ?></button>
 				</p>
 			</div>
-			<table id="price-table" class="wp-list-table widefat fixed striped">
+			<table id="tsh-price-table" class="wp-list-table widefat fixed striped tsh-table">
 				<thead>
 					<tr>
 						<th><?php echo esc_html__( 'Name', 'tool-seo-hupuna' ); ?></th>
@@ -93,13 +93,13 @@ class Hupuna_Products_Manager {
 						<th style="width: 100px;"><?php echo esc_html__( 'View', 'tool-seo-hupuna' ); ?></th>
 					</tr>
 				</thead>
-				<tbody id="price-table-body">
+				<tbody id="tsh-price-table-body">
 					<tr>
 						<td colspan="7"><?php echo esc_html__( 'Loading...', 'tool-seo-hupuna' ); ?></td>
 					</tr>
 				</tbody>
 			</table>
-			<div id="pagination" class="mt-3"></div>
+			<div id="tsh-products-pagination" class="mt-3"></div>
 		</div>
 
 		<script>
@@ -132,7 +132,7 @@ class Hupuna_Products_Manager {
 
 		function loadPage(page, search) {
 			hupunaProductsManager.lastSearch = search;
-			var tbody = document.getElementById('price-table-body');
+			var tbody = document.getElementById('tsh-price-table-body');
 			tbody.innerHTML = '<tr><td colspan="7">' + hupunaProductsManager.strings.loading + '</td></tr>';
 
 			var formData = new FormData();
@@ -158,23 +158,23 @@ class Hupuna_Products_Manager {
 					if (p.type === hupunaProductsManager.strings.variant) {
 						p.variants.forEach(function(v, i) {
 							var tr = document.createElement('tr');
-							tr.innerHTML = '<td>' + (i === 0 ? '<textarea class="edit-name" data-id="' + p.id + '" style="width: 100%; height: 100px;">' + escapeHtml(p.name) + '</textarea>' : '') + '</td>' +
+							tr.innerHTML = '<td>' + (i === 0 ? '<textarea class="tsh-edit-name" data-id="' + p.id + '" style="width: 100%; height: 100px;">' + escapeHtml(p.name) + '</textarea>' : '') + '</td>' +
 								'<td style="padding:6px;">' + escapeHtml(v.name) + '</td>' +
 								'<td style="padding:6px;">' + escapeHtml(p.type) + '</td>' +
 								'<td style="padding:6px;"><input type="number" value="' + (v.regular_price || '') + '" data-id="' + v.id + '" data-type="regular" placeholder="' + hupunaProductsManager.strings.regularPrice + '" style="width:100px;"/></td>' +
 								'<td style="padding:6px;"><input type="number" value="' + (v.sale_price || '') + '" data-id="' + v.id + '" data-type="sale" placeholder="' + hupunaProductsManager.strings.salePrice + '" style="width:100px;"/></td>' +
-								'<td style="padding:6px; white-space: nowrap;"><div style="display: flex; gap: 5px; flex-wrap: wrap;">' + (i === 0 ? '<button class="delete-btn button button-link-delete" data-id="' + p.id + '">' + hupunaProductsManager.strings.delete + '</button><button class="save-all-btn button button-primary" data-id="' + p.id + '">' + hupunaProductsManager.strings.saveAll + '</button>' : '<button class="save-btn button button-primary" data-id="' + v.id + '">' + hupunaProductsManager.strings.save + '</button>') + '</div></td>' +
+								'<td style="padding:6px; white-space: nowrap;"><div style="display: flex; gap: 5px; flex-wrap: wrap;">' + (i === 0 ? '<button class="tsh-delete-btn button tsh-button-link-delete" data-id="' + p.id + '">' + hupunaProductsManager.strings.delete + '</button><button class="tsh-save-all-btn button button-primary" data-id="' + p.id + '">' + hupunaProductsManager.strings.saveAll + '</button>' : '<button class="tsh-save-btn button button-primary" data-id="' + v.id + '">' + hupunaProductsManager.strings.save + '</button>') + '</div></td>' +
 								'<td style="padding:6px; width: 100px; text-align: center;">' + (i === 0 ? '<a href="' + escapeHtml(p.permalink || '/?p=' + p.id) + '" target="_blank" class="button button-small">' + hupunaProductsManager.strings.view + '</a>' : '') + '</td>';
 							tbody.appendChild(tr);
 						});
 					} else {
 						var tr = document.createElement('tr');
-						tr.innerHTML = '<td><textarea class="edit-name" data-id="' + p.id + '" style="width: 100%; height: 100px;">' + escapeHtml(p.name) + '</textarea></td>' +
+						tr.innerHTML = '<td><textarea class="tsh-edit-name" data-id="' + p.id + '" style="width: 100%; height: 100px;">' + escapeHtml(p.name) + '</textarea></td>' +
 							'<td style="padding:6px;">-</td>' +
 							'<td style="padding:6px;">' + escapeHtml(p.type) + '</td>' +
 							'<td style="padding:6px;"><input type="number" value="' + (p.regular_price || '') + '" data-id="' + p.id + '" data-type="regular" placeholder="' + hupunaProductsManager.strings.regularPrice + '" style="width:100px;" /></td>' +
 							'<td style="padding:6px;"><input type="number" value="' + (p.sale_price || '') + '" data-id="' + p.id + '" data-type="sale" placeholder="' + hupunaProductsManager.strings.salePrice + '" style="width:100px;" /></td>' +
-							'<td style="padding:6px; white-space: nowrap;"><div style="display: flex; gap: 5px; flex-wrap: wrap;"><button class="delete-btn button button-link-delete" data-id="' + p.id + '">' + hupunaProductsManager.strings.delete + '</button><button class="save-btn button button-primary" data-id="' + p.id + '">' + hupunaProductsManager.strings.save + '</button></div></td>' +
+							'<td style="padding:6px; white-space: nowrap;"><div style="display: flex; gap: 5px; flex-wrap: wrap;"><button class="tsh-delete-btn button tsh-button-link-delete" data-id="' + p.id + '">' + hupunaProductsManager.strings.delete + '</button><button class="tsh-save-btn button button-primary" data-id="' + p.id + '">' + hupunaProductsManager.strings.save + '</button></div></td>' +
 							'<td style="padding:6px; width: 100px; text-align: center;"><a href="' + escapeHtml(p.permalink || '/?p=' + p.id) + '" target="_blank" class="button button-small">' + hupunaProductsManager.strings.view + '</a></td>';
 						tbody.appendChild(tr);
 					}
@@ -192,7 +192,7 @@ class Hupuna_Products_Manager {
 
 		function attachEventHandlers() {
 			// Save single price
-			document.querySelectorAll('.save-btn').forEach(function(btn) {
+			document.querySelectorAll('.tsh-save-btn').forEach(function(btn) {
 				btn.addEventListener('click', function() {
 					var productId = this.dataset.id;
 					var row = this.closest('tr');
@@ -238,7 +238,7 @@ class Hupuna_Products_Manager {
 			});
 
 			// Save all variants
-			document.querySelectorAll('.save-all-btn').forEach(function(btn) {
+			document.querySelectorAll('.tsh-save-all-btn').forEach(function(btn) {
 				btn.addEventListener('click', function() {
 					var productId = this.dataset.id;
 					var regularInputs = document.querySelectorAll('input[data-type="regular"]');
@@ -291,7 +291,7 @@ class Hupuna_Products_Manager {
 			});
 
 			// Update product name
-			document.querySelectorAll('.edit-name').forEach(function(textarea) {
+			document.querySelectorAll('.tsh-edit-name').forEach(function(textarea) {
 				textarea.addEventListener('blur', function() {
 					var id = this.dataset.id;
 					var name = this.value;
@@ -319,7 +319,7 @@ class Hupuna_Products_Manager {
 			});
 
 			// Delete product
-			document.querySelectorAll('.delete-btn').forEach(function(btn) {
+			document.querySelectorAll('.tsh-delete-btn').forEach(function(btn) {
 				btn.addEventListener('click', function() {
 					if (!confirm(hupunaProductsManager.strings.confirmDelete)) return;
 
@@ -352,7 +352,7 @@ class Hupuna_Products_Manager {
 		}
 
 		function renderPagination(page, totalPages) {
-			var pagination = document.getElementById('pagination');
+			var pagination = document.getElementById('tsh-products-pagination');
 			pagination.innerHTML = '';
 			if (totalPages <= 1) return;
 
@@ -389,11 +389,11 @@ class Hupuna_Products_Manager {
 			return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
 		}
 
-		document.getElementById('search-btn').addEventListener('click', function() {
-			loadPage(1, document.getElementById('search-input').value);
+		document.getElementById('tsh-products-search-btn').addEventListener('click', function() {
+			loadPage(1, document.getElementById('tsh-products-search-input').value);
 		});
 
-		document.getElementById('search-input').addEventListener('keydown', function(e) {
+		document.getElementById('tsh-products-search-input').addEventListener('keydown', function(e) {
 			if (e.key === 'Enter') {
 				e.preventDefault();
 				loadPage(1, this.value);
@@ -407,6 +407,7 @@ class Hupuna_Products_Manager {
 
 	/**
 	 * AJAX handler: Get product prices.
+	 * Optimized with database-level pagination to prevent memory exhaustion.
 	 *
 	 * @return void
 	 */
@@ -422,50 +423,49 @@ class Hupuna_Products_Manager {
 		}
 
 		$page     = max( 1, intval( isset( $_POST['page'] ) ? $_POST['page'] : 1 ) );
-		$search   = strtolower( sanitize_text_field( isset( $_POST['search'] ) ? $_POST['search'] : '' ) );
+		$search   = trim( sanitize_text_field( isset( $_POST['search'] ) ? $_POST['search'] : '' ) );
 		$per_page = 20;
-		$offset   = ( $page - 1 ) * $per_page;
 
+		// Build WooCommerce query args with database-level pagination.
 		$args = array(
-			'status'  => 'publish',
-			'limit'   => -1,
-			'type'    => array( 'simple', 'variable' ),
-			'orderby' => 'ID',
-			'order'   => 'DESC',
+			'status'   => 'publish',
+			'limit'    => $per_page,
+			'page'     => $page,
+			'paginate' => true, // Enable pagination support.
+			'type'     => array( 'simple', 'variable' ),
+			'orderby'  => 'ID',
+			'order'    => 'DESC',
 		);
 
+		// Use WooCommerce built-in search for database-level filtering.
+		if ( ! empty( $search ) ) {
+			$args['search'] = $search;
+		}
+
+		// Execute query with pagination.
+		$products_query = wc_get_products( $args );
+
+		// Check if query returned pagination object.
+		if ( ! is_object( $products_query ) || ! isset( $products_query->products ) ) {
+			wp_send_json_success(
+				array(
+					'products' => array(),
+					'total'    => 0,
+					'per_page' => $per_page,
+					'page'     => $page,
+				)
+			);
+		}
+
+		$products      = $products_query->products;
+		$total_products = $products_query->total;
 		$grouped_products = array();
 
-		foreach ( wc_get_products( $args ) as $product ) {
+		// Process only the products from current page.
+		foreach ( $products as $product ) {
 			if ( $product->is_type( 'variable' ) ) {
-				$variants = array();
-
-				foreach ( $product->get_children() as $child_id ) {
-					$child = wc_get_product( $child_id );
-					if ( ! $child ) {
-						continue;
-					}
-
-					$variant_name = implode(
-						', ',
-						array_map(
-							function( $value, $key ) {
-								return wc_attribute_label( $key ) . ': ' . $value;
-							},
-							$child->get_attributes(),
-							array_keys( $child->get_attributes() )
-						)
-					);
-
-					if ( ! $search || false !== strpos( strtolower( $variant_name ), $search ) || false !== strpos( strtolower( $product->get_name() ), $search ) ) {
-						$variants[] = array(
-							'id'            => $child->get_id(),
-							'name'          => $variant_name,
-							'regular_price' => $child->get_regular_price(),
-							'sale_price'    => $child->get_sale_price(),
-						);
-					}
-				}
+				// Load variants only for products on current page (optimize N+1).
+				$variants = $this->get_product_variants( $product, $search );
 
 				if ( ! empty( $variants ) ) {
 					$grouped_products[] = array(
@@ -477,28 +477,106 @@ class Hupuna_Products_Manager {
 					);
 				}
 			} else {
-				if ( ! $search || false !== strpos( strtolower( $product->get_name() ), $search ) ) {
-					$grouped_products[] = array(
-						'id'            => $product->get_id(),
-						'name'          => $product->get_name(),
-						'type'          => __( 'Simple', 'tool-seo-hupuna' ),
-						'permalink'     => get_permalink( $product->get_id() ),
-						'regular_price' => $product->get_regular_price(),
-						'sale_price'    => $product->get_sale_price(),
-					);
-				}
+				// Simple product - already filtered by WooCommerce search.
+				$grouped_products[] = array(
+					'id'            => $product->get_id(),
+					'name'          => $product->get_name(),
+					'type'          => __( 'Simple', 'tool-seo-hupuna' ),
+					'permalink'     => get_permalink( $product->get_id() ),
+					'regular_price' => $product->get_regular_price(),
+					'sale_price'    => $product->get_sale_price(),
+				);
 			}
 		}
 
-		$total         = count( $grouped_products );
-		$paged_products = array_slice( $grouped_products, $offset, $per_page );
+		// Calculate total pages.
+		$total_pages = ceil( $total_products / $per_page );
 
 		wp_send_json_success(
 			array(
-				'products' => $paged_products,
-				'total'    => $total,
+				'products' => $grouped_products,
+				'total'    => $total_products,
 				'per_page' => $per_page,
 				'page'     => $page,
+			)
+		);
+	}
+
+	/**
+	 * Get product variants with optimized loading.
+	 * Only loads variants for products on the current page.
+	 *
+	 * @param WC_Product_Variable $product Product object.
+	 * @param string               $search  Search term (optional).
+	 * @return array Array of variant data.
+	 */
+	private function get_product_variants( $product, $search = '' ) {
+		if ( ! $product->is_type( 'variable' ) ) {
+			return array();
+		}
+
+		$variants = array();
+		$child_ids = $product->get_children();
+
+		// Batch load all variant products to avoid N+1 queries.
+		// WooCommerce will cache these internally.
+		$variant_products = array();
+		foreach ( $child_ids as $child_id ) {
+			$variant_products[ $child_id ] = wc_get_product( $child_id );
+		}
+
+		// Process variants.
+		foreach ( $variant_products as $child_id => $child ) {
+			if ( ! $child ) {
+				continue;
+			}
+
+			$variant_name = $this->format_variant_name( $child );
+
+			// If search is provided, filter variants (search already filtered parent products).
+			if ( ! empty( $search ) ) {
+				$search_lower = strtolower( $search );
+				$variant_name_lower = strtolower( $variant_name );
+				$product_name_lower = strtolower( $product->get_name() );
+
+				// Skip variant if it doesn't match search.
+				if ( false === strpos( $variant_name_lower, $search_lower ) &&
+					false === strpos( $product_name_lower, $search_lower ) ) {
+					continue;
+				}
+			}
+
+			$variants[] = array(
+				'id'            => $child->get_id(),
+				'name'          => $variant_name,
+				'regular_price' => $child->get_regular_price(),
+				'sale_price'    => $child->get_sale_price(),
+			);
+		}
+
+		return $variants;
+	}
+
+	/**
+	 * Format variant name from attributes.
+	 *
+	 * @param WC_Product_Variation $variant Variant product object.
+	 * @return string Formatted variant name.
+	 */
+	private function format_variant_name( $variant ) {
+		$attributes = $variant->get_attributes();
+		if ( empty( $attributes ) ) {
+			return '';
+		}
+
+		return implode(
+			', ',
+			array_map(
+				function( $value, $key ) {
+					return wc_attribute_label( $key ) . ': ' . $value;
+				},
+				$attributes,
+				array_keys( $attributes )
 			)
 		);
 	}
@@ -614,7 +692,7 @@ class Hupuna_Products_Manager {
 	public function ajax_delete_product() {
 		check_ajax_referer( 'tool_seo_hupuna_products_manager_nonce', 'nonce' );
 
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! current_user_can( 'delete_products' ) ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'tool-seo-hupuna' ) ) );
 		}
 

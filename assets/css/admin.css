@@ -1,18 +1,18 @@
 /* Tool SEO Hupuna Admin Styles */
 
-.tool-seo-hupuna-wrap {
+.tsh-wrap {
 	margin-top: 20px;
 }
 
-.tool-seo-hupuna-header {
+.tsh-header {
 	margin-bottom: 20px;
 }
 
-.tool-seo-hupuna-actions {
+.tsh-actions {
 	margin: 20px 0;
 }
 
-.tool-seo-hupuna-progress-bar {
+.tsh-progress-bar {
 	background: #f0f0f1;
 	border-radius: 4px;
 	height: 30px;
@@ -20,78 +20,101 @@
 	margin-bottom: 10px;
 }
 
-.tool-seo-hupuna-progress-fill {
+.tsh-progress-fill {
 	background: #2271b1;
 	height: 100%;
 	transition: width 0.3s;
 }
 
-.tool-seo-hupuna-scan-results {
+.tsh-scan-results {
 	margin-top: 20px;
 }
 
-.tool-seo-hupuna-results-summary {
+.tsh-results-summary {
 	margin-bottom: 20px;
 }
 
-.tool-seo-hupuna-results-tabs {
+.tsh-results-tabs {
 	margin-bottom: 20px;
 }
 
-.tool-seo-hupuna-results-content {
+.tsh-results-content {
 	margin-top: 20px;
+}
+
+/* Override WordPress card max-width for full width results */
+.tsh-results-content .card,
+.tsh-results-content .tsh-card {
+	max-width: 100% !important;
+	width: 100% !important;
+	box-sizing: border-box;
+}
+
+/* Ensure all cards in plugin are full width */
+.tsh-wrap .card.tsh-card {
+	max-width: 100% !important;
+	width: 100% !important;
 }
 
 /* Button Link Delete Style */
-.button-link-delete {
+.tsh-button-link-delete {
 	color: #b32d2e !important;
 	border-color: #b32d2e !important;
 }
 
-.button-link-delete:hover {
+.tsh-button-link-delete:hover {
 	background: #b32d2e !important;
 	color: #fff !important;
 	border-color: #b32d2e !important;
 }
 
 /* Search input improvements */
-.card p {
+.tsh-card p {
 	margin: 0;
 }
 
-.card input[type="text"] {
+.tsh-card input[type="text"] {
 	margin-right: 10px;
 }
 
 /* Table action buttons */
-.wp-list-table td .button {
+.tsh-table td .button {
 	margin: 0;
 }
 
-.wp-list-table td div[style*="display: flex"] {
+.tsh-table td div[style*="display: flex"] {
 	align-items: center;
 }
 
-.wp-list-table td div[style*="display: flex"] .button {
+.tsh-table td div[style*="display: flex"] .button {
 	flex-shrink: 0;
+}
+
+/* Actions column styling */
+.tsh-table th[style*="width"] {
+	white-space: nowrap;
+}
+
+.tsh-table td[style*="white-space: nowrap"] {
+	white-space: nowrap;
 }
 
 /* Responsive tables */
 @media screen and (max-width: 782px) {
-	.wp-list-table {
+	.tsh-table {
 		display: block;
 		overflow-x: auto;
 		white-space: nowrap;
 	}
 	
-	.card input[type="text"] {
+	.tsh-card input[type="text"] {
 		width: 100% !important;
 		max-width: 100% !important;
 		margin-right: 0;
 		margin-bottom: 10px;
 	}
 	
-	.card .button {
+	.tsh-card .button {
 		width: 100%;
 		margin-bottom: 5px;
 	}

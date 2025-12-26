@@ -3,7 +3,7 @@
  * Admin Controller Class
  * Manages admin pages, assets, and AJAX handlers.
  *
- * @package HupunaExternalLinkScanner
+ * @package ToolSeoHupuna
  */
 
 // If this file is called directly, abort.
@@ -198,10 +198,10 @@ class Hupuna_External_Link_Scanner_Admin {
 		}
 
 		?>
-		<div class="wrap">
+		<div class="wrap tsh-wrap">
 			<h1><?php echo esc_html__( 'External Link Scanner', 'tool-seo-hupuna' ); ?></h1>
 
-			<div class="card">
+			<div class="card tsh-card">
 				<p>
 					<strong><?php echo esc_html__( 'Current Domain:', 'tool-seo-hupuna' ); ?></strong>
 					<code><?php echo esc_html( home_url() ); ?></code>
@@ -216,16 +216,16 @@ class Hupuna_External_Link_Scanner_Admin {
 					<span class="dashicons dashicons-search"></span> <?php echo esc_html__( 'Start Scan', 'tool-seo-hupuna' ); ?>
 				</button>
 
-				<div id="tool-seo-hupuna-progress-wrap" style="display:none; margin-top: 20px;">
+				<div id="tool-seo-hupuna-progress-wrap" class="tsh-progress-bar" style="display:none; margin-top: 20px;">
 					<div style="background: #f0f0f1; border-radius: 4px; height: 30px; overflow: hidden;">
-						<div id="tool-seo-hupuna-progress-fill" style="background: #2271b1; height: 100%; width: 0%; transition: width 0.3s;"></div>
+						<div id="tool-seo-hupuna-progress-fill" class="tsh-progress-fill" style="background: #2271b1; height: 100%; width: 0%; transition: width 0.3s;"></div>
 					</div>
 					<div id="tool-seo-hupuna-progress-text" style="margin-top: 10px;"><?php echo esc_html__( 'Initializing...', 'tool-seo-hupuna' ); ?></div>
 				</div>
 			</div>
 
-			<div id="tool-seo-hupuna-scan-results" style="display: none;">
-				<div class="card" style="margin-bottom: 20px;">
+			<div id="tool-seo-hupuna-scan-results" class="tsh-scan-results" style="display: none;">
+				<div class="card tsh-card" style="margin-bottom: 20px;">
 					<p>
 						<strong><?php echo esc_html__( 'Total Links Found:', 'tool-seo-hupuna' ); ?></strong>
 						<span id="total-links">0</span> |
@@ -234,16 +234,16 @@ class Hupuna_External_Link_Scanner_Admin {
 					</p>
 				</div>
 
-				<div class="nav-tab-wrapper" style="margin-bottom: 20px;">
-					<button class="nav-tab nav-tab-active" data-tab="grouped">
+				<div class="nav-tab-wrapper tsh-results-tabs" style="margin-bottom: 20px;">
+					<button class="nav-tab nav-tab-active tsh-tab" data-tab="grouped">
 						<?php echo esc_html__( 'Grouped by URL', 'tool-seo-hupuna' ); ?>
 					</button>
-					<button class="nav-tab" data-tab="all">
+					<button class="nav-tab tsh-tab" data-tab="all">
 						<?php echo esc_html__( 'All Occurrences', 'tool-seo-hupuna' ); ?>
 					</button>
 				</div>
 
-				<div id="tool-seo-hupuna-results-content"></div>
+				<div id="tool-seo-hupuna-results-content" class="tsh-results-content"></div>
 			</div>
 		</div>
 		<?php
