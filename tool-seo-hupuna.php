@@ -41,6 +41,7 @@ require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-scanner.php';
 require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-admin.php';
 require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-posts-manager.php';
 require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-products-manager.php';
+require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-robots-manager.php';
 
 /**
  * Initialize the plugin.
@@ -56,6 +57,9 @@ function tool_seo_hupuna_init() {
 
 	// Initialize Products Manager.
 	new Hupuna_Products_Manager();
+
+	// Initialize Robots Manager.
+	new Hupuna_Robots_Manager();
 }
 add_action( 'plugins_loaded', 'tool_seo_hupuna_init' );
 

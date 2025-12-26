@@ -254,7 +254,7 @@
             if (currentTab === 'grouped') {
                 $.each(pageItems, function(i, group) {
                     html += '<div class="card tsh-card" style="margin-bottom: 20px;">';
-                    html += '<h3>' + escapeHtml(group.url) + ' <span class="description">(' + group.occurrences.length + ' ' + (group.occurrences.length === 1 ? 'occurrence' : 'occurrences') + ')</span></h3>';
+                    html += '<h3>' + escapeHtml(group.url) + ' <span class="description">(' + group.occurrences.length + ' ' + (group.occurrences.length === 1 ? toolSeoHupuna.strings.occurrence : toolSeoHupuna.strings.occurrences) + ')</span></h3>';
                     html += '<table class="wp-list-table widefat fixed striped tsh-table">';
                     html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th style="width: 150px;">Actions</th></tr></thead><tbody>';
                     $.each(group.occurrences, function(j, item) {
@@ -300,7 +300,7 @@
             
             if (item.is_safe === false) {
                 riskStyle = 'style="background-color: #ffe6e6;"';
-                riskBadge = '<span class="badge" style="background: #d63638; color: white; padding: 2px 5px; border-radius: 3px; font-size: 10px; margin-left: 5px; font-weight: normal;">⚠️ ' + escapeHtml(item.risk_type || 'UNSAFE') + '</span>';
+                riskBadge = '<span class="badge" style="background: #d63638; color: white; padding: 2px 5px; border-radius: 3px; font-size: 10px; margin-left: 5px; font-weight: normal;">⚠️ ' + escapeHtml(item.risk_type || toolSeoHupuna.strings.unsafe) + '</span>';
             }
             
             var actionsHtml = '';

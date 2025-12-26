@@ -56,6 +56,16 @@ class Hupuna_External_Link_Scanner_Admin {
 			'dashicons-admin-tools',
 			30
 		);
+		
+		// Add submenu for External Link Scanner (same as main page).
+		add_submenu_page(
+			'tool-seo-hupuna',
+			__( 'External Link Scanner', 'tool-seo-hupuna' ),
+			__( 'External Links', 'tool-seo-hupuna' ),
+			'manage_options',
+			'tool-seo-hupuna',
+			array( $this, 'render_admin_page' )
+		);
 	}
 
 	/**
@@ -118,6 +128,9 @@ class Hupuna_External_Link_Scanner_Admin {
 					'prev'            => __( '&laquo; Prev', 'tool-seo-hupuna' ),
 					'next'            => __( 'Next &raquo;', 'tool-seo-hupuna' ),
 					'of'              => __( 'of', 'tool-seo-hupuna' ),
+					'occurrence'      => __( 'occurrence', 'tool-seo-hupuna' ),
+					'occurrences'     => __( 'occurrences', 'tool-seo-hupuna' ),
+					'unsafe'          => __( 'Unsafe', 'tool-seo-hupuna' ),
 				),
 			)
 		);

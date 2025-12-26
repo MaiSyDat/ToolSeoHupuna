@@ -118,8 +118,8 @@ class Hupuna_Posts_Manager {
 	public function add_admin_menu() {
 		add_submenu_page(
 			'tool-seo-hupuna',
-			__( 'Posts with Links', 'tool-seo-hupuna' ),
-			__( 'Posts with Links', 'tool-seo-hupuna' ),
+			__( 'Post Link Manager', 'tool-seo-hupuna' ),
+			__( 'Post Link Manager', 'tool-seo-hupuna' ),
 			'manage_options',
 			'tool-seo-hupuna-posts-with-links',
 			array( $this, 'render_admin_page' )
@@ -139,7 +139,7 @@ class Hupuna_Posts_Manager {
 		wp_enqueue_script( 'jquery' );
 		?>
 		<div class="wrap tsh-wrap">
-			<h1><?php echo esc_html__( 'Posts with Links', 'tool-seo-hupuna' ); ?></h1>
+			<h1><?php echo esc_html__( 'Post Link Manager', 'tool-seo-hupuna' ); ?></h1>
 			<div class="card tsh-card" style="margin-bottom: 20px;">
 				<p style="margin: 0;">
 					<input type="text" id="tsh-posts-search-input" class="regular-text" placeholder="<?php echo esc_attr__( 'Paste URL to find posts containing this link...', 'tool-seo-hupuna' ); ?>" style="width: calc(100% - 200px); max-width: 800px; margin-right: 10px;" />
@@ -233,7 +233,7 @@ class Hupuna_Posts_Manager {
 						return '<div style="margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: ' + bgColor + ';">' +
 							'<div style="margin-bottom: 5px; font-size: 11px;">' +
 							'<span style="background: ' + badgeColor + '; color: #fff; padding: 2px 8px; border-radius: 3px; font-weight: 600; margin-right: 5px;">' + typeLabel + '</span>' +
-							'<span style="color: #666;">' + (link.text || '(no text)') + '</span>' +
+							'<span style="color: #666;">' + (link.text || '(No anchor text)') + '</span>' +
 							'</div>' +
 							'<input type="text" class="tsh-edit-link-url" data-post-id="' + post.id + '" data-link-index="' + index + '" data-old-url="' + escapeHtml(link.url) + '" value="' + escapeHtml(link.url) + '" style="width: 100%; padding: 5px; font-size: 12px; border: 1px solid #ccc;" placeholder="URL" />' +
 							'<div style="margin-top: 5px;"><a href="' + escapeHtml(link.url) + '" target="_blank" class="button button-small">' + hupunaPostsManager.strings.viewLink + '</a></div>' +

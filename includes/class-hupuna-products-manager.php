@@ -49,8 +49,8 @@ class Hupuna_Products_Manager {
 
 		add_submenu_page(
 			'tool-seo-hupuna',
-			__( 'Product Price Manager', 'tool-seo-hupuna' ),
-			__( 'Product Prices', 'tool-seo-hupuna' ),
+			__( 'Product Manager', 'tool-seo-hupuna' ),
+			__( 'Product Manager', 'tool-seo-hupuna' ),
 			'manage_woocommerce',
 			'tool-seo-hupuna-product-prices',
 			array( $this, 'render_admin_page' )
@@ -74,7 +74,7 @@ class Hupuna_Products_Manager {
 		wp_enqueue_script( 'jquery' );
 		?>
 		<div class="wrap tsh-wrap">
-			<h1><?php echo esc_html__( 'Product Price Manager', 'tool-seo-hupuna' ); ?></h1>
+			<h1><?php echo esc_html__( 'Product Manager', 'tool-seo-hupuna' ); ?></h1>
 			<div class="card tsh-card" style="margin-bottom: 20px;">
 				<p style="margin: 0;">
 					<input type="text" id="tsh-products-search-input" class="regular-text" placeholder="<?php echo esc_attr__( 'Search products...', 'tool-seo-hupuna' ); ?>" style="width: calc(100% - 120px); max-width: 800px; margin-right: 10px;" />
@@ -527,7 +527,7 @@ class Hupuna_Products_Manager {
 
 		// Process variants.
 		foreach ( $variant_products as $child_id => $child ) {
-			if ( ! $child ) {
+			if ( ! $child || ! is_a( $child, 'WC_Product_Variation' ) ) {
 				continue;
 			}
 
