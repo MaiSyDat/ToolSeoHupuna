@@ -43,6 +43,7 @@ require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-posts-manager.p
 require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-products-manager.php';
 require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-robots-manager.php';
 require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-images-manager.php';
+require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-llms-manager.php';
 
 /**
  * Initialize the plugin.
@@ -64,6 +65,9 @@ function tool_seo_hupuna_init() {
 
 	// Initialize Images Manager.
 	new Hupuna_Images_Manager();
+
+	// Initialize LLMs Manager.
+	new Hupuna_Llms_Manager();
 }
 add_action( 'plugins_loaded', 'tool_seo_hupuna_init' );
 
@@ -81,3 +85,23 @@ function tool_seo_hupuna_load_textdomain() {
 }
 add_action( 'plugins_loaded', 'tool_seo_hupuna_load_textdomain' );
 
+/**
+ * Flush rewrite rules on plugin activation.
+ *
+ * @return void
+ */
+function tool_seo_hupuna_activate() {
+	// Flush rewrite rules to register llms.txt route.
+	flush_rewrite_rules();
+}
+register_activation_hook( __FILE__, 'tool_seo_hupuna_activate' );
+
+/**
+ * Flush rewrite rules on plugin deactivation.
+ *
+ * @return void
+ */
+function tool_seo_hupuna_deactivate() {
+	flush_rewrite_rules();
+}
+register_deactivation_hook( __FILE__, 'tool_seo_hupuna_deactivate' );

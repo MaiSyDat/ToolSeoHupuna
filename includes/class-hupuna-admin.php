@@ -214,7 +214,7 @@ class Hupuna_External_Link_Scanner_Admin {
 		<div class="wrap tsh-wrap">
 			<h1><?php echo esc_html__( 'External Link Scanner', 'tool-seo-hupuna' ); ?></h1>
 
-			<div class="card tsh-card">
+			<div class="tsh-panel">
 				<p>
 					<strong><?php echo esc_html__( 'Current Domain:', 'tool-seo-hupuna' ); ?></strong>
 					<code><?php echo esc_html( home_url() ); ?></code>
@@ -238,7 +238,7 @@ class Hupuna_External_Link_Scanner_Admin {
 			</div>
 
 			<div id="tool-seo-hupuna-scan-results" class="tsh-scan-results" style="display: none;">
-				<div class="card tsh-card" style="margin-bottom: 20px;">
+				<div class="tsh-panel" style="margin-bottom: 20px;">
 					<p>
 						<strong><?php echo esc_html__( 'Total Links Found:', 'tool-seo-hupuna' ); ?></strong>
 						<span id="total-links">0</span> |
