@@ -34,10 +34,18 @@ class Hupuna_Posts_Manager {
 
 	/**
 	 * Get current site domain.
+	 * Uses cached value to avoid repeated calculations.
 	 *
 	 * @return string Site domain.
 	 */
 	private function get_site_domain() {
+		// Use cached site domain (shared with scanner).
+		$cached_domain = get_transient( 'tool_seo_hupuna_site_domain' );
+		
+		if ( false !== $cached_domain ) {
+			return $cached_domain;
+		}
+
 		$url    = home_url();
 		$parsed = wp_parse_url( $url );
 		$host   = isset( $parsed['host'] ) ? $parsed['host'] : '';
@@ -51,6 +59,9 @@ class Hupuna_Posts_Manager {
 				}
 			}
 		}
+		
+		// Cache for 24 hours.
+		set_transient( 'tool_seo_hupuna_site_domain', $host, DAY_IN_SECONDS );
 		
 		return $host;
 	}
@@ -140,7 +151,7 @@ class Hupuna_Posts_Manager {
 		?>
 		<div class="wrap tsh-wrap">
 			<h1><?php echo esc_html__( 'Post Link Manager', 'tool-seo-hupuna' ); ?></h1>
-			<div class="card tsh-card" style="margin-bottom: 20px;">
+			<div class="tsh-panel" style="margin-bottom: 20px;">
 				<p style="margin: 0;">
 					<input type="text" id="tsh-posts-search-input" class="regular-text" placeholder="<?php echo esc_attr__( 'Paste URL to find posts containing this link...', 'tool-seo-hupuna' ); ?>" style="width: calc(100% - 200px); max-width: 800px; margin-right: 10px;" />
 					<button id="tsh-posts-search-btn" class="button button-primary"><?php echo esc_html__( 'Search', 'tool-seo-hupuna' ); ?></button>
@@ -422,10 +433,14 @@ class Hupuna_Posts_Manager {
 		$search   = trim( sanitize_text_field( isset( $_POST['search'] ) ? $_POST['search'] : '' ) );
 		$per_page = 20;
 
-		// Get all public post types.
-		$post_types = get_post_types( array( 'public' => true ), 'names' );
-		$excluded   = array( 'attachment', 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset' );
-		$post_types = array_diff( $post_types, $excluded );
+		// Get all public post types (cached).
+		$post_types = get_transient( 'tool_seo_hupuna_public_post_types' );
+		if ( false === $post_types ) {
+			$post_types = get_post_types( array( 'public' => true ), 'names' );
+			$excluded   = array( 'attachment', 'revision', 'nav_menu_item', 'custom_css', 'customize_changeset' );
+			$post_types = array_diff( $post_types, $excluded );
+			set_transient( 'tool_seo_hupuna_public_post_types', $post_types, TOOL_SEO_HUPUNA_CACHE_EXPIRATION );
+		}
 
 		// Build WP_Query args with database-level pagination.
 		$args = array(

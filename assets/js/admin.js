@@ -253,7 +253,7 @@
             // Render List
             if (currentTab === 'grouped') {
                 $.each(pageItems, function(i, group) {
-                    html += '<div class="card tsh-card" style="margin-bottom: 20px;">';
+                    html += '<div class="tsh-panel" style="margin-bottom: 20px;">';
                     html += '<h3>' + escapeHtml(group.url) + ' <span class="description">(' + group.occurrences.length + ' ' + (group.occurrences.length === 1 ? toolSeoHupuna.strings.occurrence : toolSeoHupuna.strings.occurrences) + ')</span></h3>';
                     html += '<table class="wp-list-table widefat fixed striped tsh-table">';
                     html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th style="width: 150px;">Actions</th></tr></thead><tbody>';

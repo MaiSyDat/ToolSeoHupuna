@@ -75,7 +75,7 @@ class Hupuna_Products_Manager {
 		?>
 		<div class="wrap tsh-wrap">
 			<h1><?php echo esc_html__( 'Product Manager', 'tool-seo-hupuna' ); ?></h1>
-			<div class="card tsh-card" style="margin-bottom: 20px;">
+			<div class="tsh-panel" style="margin-bottom: 20px;">
 				<p style="margin: 0;">
 					<input type="text" id="tsh-products-search-input" class="regular-text" placeholder="<?php echo esc_attr__( 'Search products...', 'tool-seo-hupuna' ); ?>" style="width: calc(100% - 120px); max-width: 800px; margin-right: 10px;" />
 					<button id="tsh-products-search-btn" class="button button-primary"><?php echo esc_html__( 'Search', 'tool-seo-hupuna' ); ?></button>

@@ -80,7 +80,7 @@ class Hupuna_Robots_Manager {
 		<div class="wrap">
 			<h1><?php echo esc_html__( 'Robots.txt Manager', 'tool-seo-hupuna' ); ?></h1>
 			
-			<div class="card tsh-card" style="max-width: 100%; margin-top: 20px;">
+			<div class="tsh-panel" style="max-width: 100%; margin-top: 20px;">
 				<h2><?php echo esc_html__( 'Edit Robots.txt', 'tool-seo-hupuna' ); ?></h2>
 				<p class="description">
 					<?php echo esc_html__( 'Edit your site\'s robots.txt content. This will override the default WordPress robots.txt output.', 'tool-seo-hupuna' ); ?>
@@ -118,7 +118,7 @@ class Hupuna_Robots_Manager {
 				</form>
 			</div>
 
-			<div class="card tsh-card" style="max-width: 100%; margin-top: 20px;">
+			<div class="tsh-panel" style="max-width: 100%; margin-top: 20px;">
 				<h2><?php echo esc_html__( 'Preview', 'tool-seo-hupuna' ); ?></h2>
 				<p class="description">
 					<?php echo esc_html__( 'Preview how your robots.txt will appear:', 'tool-seo-hupuna' ); ?>

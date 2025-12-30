@@ -38,16 +38,18 @@ class Hupuna_Llms_Manager {
 	private $cache_key = 'hupuna_llms_content';
 
 	/**
-	 * Cache expiration (1 hour).
+	 * Cache expiration (uses plugin constant).
 	 *
 	 * @var int
 	 */
-	private $cache_expiration = 3600;
+	private $cache_expiration;
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
+		// Use plugin cache expiration constant if available, otherwise default to 1 hour.
+		$this->cache_expiration = defined( 'TOOL_SEO_HUPUNA_CACHE_EXPIRATION' ) ? TOOL_SEO_HUPUNA_CACHE_EXPIRATION : HOUR_IN_SECONDS;
 		$this->init_hooks();
 	}
 

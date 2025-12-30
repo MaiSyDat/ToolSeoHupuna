@@ -2,26 +2,22 @@
 
 /* Scope all styles to plugin admin pages to prevent conflicts */
 body.toplevel_page_tool-seo-hupuna .tsh-wrap,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-wrap,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-wrap {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-wrap {
 	margin-top: 20px;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-header,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-header,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-header {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-header {
 	margin-bottom: 20px;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-actions,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-actions,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-actions {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-actions {
 	margin: 20px 0;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-progress-bar,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-progress-bar,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-progress-bar {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-progress-bar {
 	background: #f0f0f1;
 	border-radius: 4px;
 	height: 30px;
@@ -30,47 +26,45 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-progress-bar {
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-progress-fill,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-progress-fill,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-progress-fill {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-progress-fill {
 	background: #2271b1;
 	height: 100%;
 	transition: width 0.3s;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-scan-results,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-scan-results,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-scan-results {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-scan-results {
 	margin-top: 20px;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-results-summary,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-summary,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-results-summary {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-summary {
 	margin-bottom: 20px;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-results-tabs,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-tabs,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-results-tabs {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-tabs {
 	margin-bottom: 20px;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-results-content,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-content,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-results-content {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-content {
 	margin-top: 20px;
 }
 
 /* Custom Panel Component - Replaces WordPress .card */
+/* Scoped to all plugin pages to prevent conflicts */
 body.toplevel_page_tool-seo-hupuna .tsh-panel,
 body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel {
+body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel,
+body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel,
+body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel {
 	position: relative;
 	margin-top: 20px;
 	padding: 1.5em 2em;
 	min-width: 255px;
-	max-width: 100%;
-	width: 100%;
+	max-width: 100% !important;
+	width: 100% !important;
 	border: 1px solid #c3c4c7;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
 	background: #fff;
@@ -79,7 +73,14 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel {
 
 body.toplevel_page_tool-seo-hupuna .tsh-panel h2,
 body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel h2,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel h2 {
+body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel h2,
+body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel h2,
+body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel h2,
+body.toplevel_page_tool-seo-hupuna .tsh-panel h3,
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel h3,
+body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel h3,
+body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel h3,
+body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel h3 {
 	margin-top: 0;
 	margin-bottom: 15px;
 	padding-bottom: 10px;
@@ -88,7 +89,9 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel h2 {
 
 body.toplevel_page_tool-seo-hupuna .tsh-panel .description,
 body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel .description,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel .description {
+body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel .description,
+body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel .description,
+body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel .description {
 	margin-bottom: 15px;
 	color: #646970;
 }
@@ -96,7 +99,11 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel .description {
 /* Full width results */
 body.toplevel_page_tool-seo-hupuna .tsh-results-content .tsh-panel,
 body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-content .tsh-panel,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-results-content .tsh-panel {
+body.toplevel_page_tool-seo-hupuna .tsh-panel,
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel,
+body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel,
+body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel,
+body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel {
 	max-width: 100% !important;
 	width: 100% !important;
 	box-sizing: border-box;
@@ -104,15 +111,13 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-results-content .tsh-panel
 
 /* Button Link Delete Style */
 body.toplevel_page_tool-seo-hupuna .tsh-button-link-delete,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-button-link-delete,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-button-link-delete {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-button-link-delete {
 	color: #b32d2e !important;
 	border-color: #b32d2e !important;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-button-link-delete:hover,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-button-link-delete:hover,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-button-link-delete:hover {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-button-link-delete:hover {
 	background: #b32d2e !important;
 	color: #fff !important;
 	border-color: #b32d2e !important;
@@ -120,62 +125,53 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-button-link-delete:hover {
 
 /* Search input improvements */
 body.toplevel_page_tool-seo-hupuna .tsh-panel p,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel p,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel p {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel p {
 	margin: 0;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-panel input[type="text"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel input[type="text"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel input[type="text"] {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel input[type="text"] {
 	margin-right: 10px;
 }
 
 /* Table action buttons */
 body.toplevel_page_tool-seo-hupuna .tsh-table td .button,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td .button,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-table td .button {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td .button {
 	margin: 0;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-table td div[style*="display: flex"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td div[style*="display: flex"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-table td div[style*="display: flex"] {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td div[style*="display: flex"] {
 	align-items: center;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-table td div[style*="display: flex"] .button,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td div[style*="display: flex"] .button,
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-table td div[style*="display: flex"] .button {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td div[style*="display: flex"] .button {
 	flex-shrink: 0;
 }
 
 /* Actions column styling */
 body.toplevel_page_tool-seo-hupuna .tsh-table th[style*="width"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table th[style*="width"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-table th[style*="width"] {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table th[style*="width"] {
 	white-space: nowrap;
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-table td[style*="white-space: nowrap"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td[style*="white-space: nowrap"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-table td[style*="white-space: nowrap"] {
+body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td[style*="white-space: nowrap"] {
 	white-space: nowrap;
 }
 
 /* Responsive tables */
 @media screen and (max-width: 782px) {
 	body.toplevel_page_tool-seo-hupuna .tsh-table,
-	body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table,
-	body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-table {
+	body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table {
 		display: block;
 		overflow-x: auto;
 		white-space: nowrap;
 	}
 	
 	body.toplevel_page_tool-seo-hupuna .tsh-panel input[type="text"],
-	body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel input[type="text"],
-	body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel input[type="text"] {
+	body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel input[type="text"] {
 		width: 100% !important;
 		max-width: 100% !important;
 		margin-right: 0;
@@ -183,8 +179,7 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-table td[style*="white-spa
 	}
 	
 	body.toplevel_page_tool-seo-hupuna .tsh-panel .button,
-	body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel .button,
-	body.tool-seo-hupuna_page_tool-seo-hupuna-images .tsh-panel .button {
+	body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel .button {
 		width: 100%;
 		margin-bottom: 5px;
 	}

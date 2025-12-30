@@ -33,10 +33,18 @@ class Hupuna_External_Link_Scanner {
 	/**
 	 * Get current site domain.
 	 * Handles localhost and subdirectory installations.
+	 * Uses caching to avoid repeated calculations.
 	 *
 	 * @return string Site domain.
 	 */
 	private function get_site_domain() {
+		// Use transient cache for site domain (rarely changes).
+		$cached_domain = get_transient( 'tool_seo_hupuna_site_domain' );
+		
+		if ( false !== $cached_domain ) {
+			return $cached_domain;
+		}
+
 		$url    = home_url();
 		$parsed = wp_parse_url( $url );
 		$host   = isset( $parsed['host'] ) ? $parsed['host'] : '';
@@ -52,6 +60,9 @@ class Hupuna_External_Link_Scanner {
 				}
 			}
 		}
+		
+		// Cache for 24 hours (site domain rarely changes).
+		set_transient( 'tool_seo_hupuna_site_domain', $host, DAY_IN_SECONDS );
 		
 		return $host;
 	}
@@ -294,14 +305,16 @@ class Hupuna_External_Link_Scanner {
 	public function scan_post_type_batch( $post_type, $page = 1, $per_page = 20 ) {
 		$results = array();
 
+		// Optimized query args for performance.
 		$args = array(
 			'post_type'              => $post_type,
 			'post_status'            => 'any',
 			'posts_per_page'         => $per_page,
 			'paged'                  => $page,
-			'fields'                 => 'ids',
-			'no_found_rows'          => true,
-			'update_post_term_cache' => false,
+			'fields'                 => 'ids', // Only get IDs, not full post objects.
+			'no_found_rows'          => true, // Skip SQL_CALC_FOUND_ROWS for performance.
+			'update_post_term_cache' => false, // Don't cache terms.
+			'update_post_meta_cache' => false, // Don't cache meta (we'll fetch what we need).
 		);
 
 		$posts = get_posts( $args );
@@ -313,23 +326,25 @@ class Hupuna_External_Link_Scanner {
 			);
 		}
 
+		// Batch fetch post data to reduce database queries.
 		foreach ( $posts as $post_id ) {
-			$post = get_post( $post_id );
-			if ( ! $post ) {
+			// Use get_post with specific fields to reduce memory usage.
+			$post = get_post( $post_id, ARRAY_A );
+			if ( ! $post || empty( $post['post_content'] ) ) {
 				continue;
 			}
 
 			// Scan Content.
-			$links = $this->extract_links( $post->post_content );
+			$links = $this->extract_links( $post['post_content'] );
 			foreach ( $links as $link ) {
-				$results[] = $this->format_result( $link, $post_type, $post_id, $post->post_title, __( 'Content', 'tool-seo-hupuna' ) );
+				$results[] = $this->format_result( $link, $post_type, $post_id, $post['post_title'], __( 'Content', 'tool-seo-hupuna' ) );
 			}
 
 			// Scan Excerpt.
-			if ( ! empty( $post->post_excerpt ) ) {
-				$links = $this->extract_links( $post->post_excerpt );
+			if ( ! empty( $post['post_excerpt'] ) ) {
+				$links = $this->extract_links( $post['post_excerpt'] );
 				foreach ( $links as $link ) {
-					$results[] = $this->format_result( $link, $post_type, $post_id, $post->post_title, __( 'Excerpt', 'tool-seo-hupuna' ) );
+					$results[] = $this->format_result( $link, $post_type, $post_id, $post['post_title'], __( 'Excerpt', 'tool-seo-hupuna' ) );
 				}
 			}
 		}

@@ -70,15 +70,18 @@ class Hupuna_External_Link_Scanner_Admin {
 
 	/**
 	 * Enqueue Assets.
+	 * Optimized with conditional loading and caching.
 	 *
 	 * @param string $hook Current admin page hook.
 	 * @return void
 	 */
 	public function enqueue_admin_assets( $hook ) {
+		// Only load on plugin admin pages.
 		if ( 'toplevel_page_tool-seo-hupuna' !== $hook ) {
 			return;
 		}
 
+		// Enqueue styles with version for cache busting.
 		wp_enqueue_style(
 			'tool-seo-hupuna-admin',
 			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/css/admin.css',
@@ -86,6 +89,7 @@ class Hupuna_External_Link_Scanner_Admin {
 			TOOL_SEO_HUPUNA_VERSION
 		);
 
+		// Enqueue scripts in footer for better page load performance.
 		wp_enqueue_script(
 			'tool-seo-hupuna-admin',
 			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/js/admin.js',
@@ -94,13 +98,21 @@ class Hupuna_External_Link_Scanner_Admin {
 			true
 		);
 
+		// Cache post types list (rarely changes).
+		$post_types = get_transient( 'tool_seo_hupuna_post_types' );
+		if ( false === $post_types ) {
+			$post_types = $this->scanner->get_scannable_post_types();
+			set_transient( 'tool_seo_hupuna_post_types', $post_types, TOOL_SEO_HUPUNA_CACHE_EXPIRATION );
+		}
+
+		// Localize script with cached data.
 		wp_localize_script(
 			'tool-seo-hupuna-admin',
 			'toolSeoHupuna',
 			array(
 				'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
 				'nonce'     => wp_create_nonce( 'tool_seo_hupuna_scan_links_nonce' ),
-				'postTypes' => $this->scanner->get_scannable_post_types(),
+				'postTypes' => $post_types,
 				'strings'   => array(
 					'scanning'        => __( 'Scanning...', 'tool-seo-hupuna' ),
 					'scanCompleted'   => __( 'Scan Completed!', 'tool-seo-hupuna' ),
@@ -138,11 +150,12 @@ class Hupuna_External_Link_Scanner_Admin {
 
 	/**
 	 * AJAX Handler for Batch Scanning.
+	 * Optimized with better error handling and input validation.
 	 *
 	 * @return void
 	 */
 	public function ajax_scan_batch() {
-		// Check capabilities first.
+		// Check capabilities first (security).
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
 				array(
@@ -151,17 +164,28 @@ class Hupuna_External_Link_Scanner_Admin {
 			);
 		}
 
-		// Verify nonce.
-		check_ajax_referer( 'tool_seo_hupuna_scan_links_nonce', 'nonce' );
+		// Verify nonce (security).
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'tool_seo_hupuna_scan_links_nonce' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Security check failed', 'tool-seo-hupuna' ),
+				)
+			);
+		}
 
-		// Prevent timeout.
+		// Prevent timeout for long scans.
 		if ( function_exists( 'set_time_limit' ) ) {
 			@set_time_limit( 0 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		}
 
-		// Sanitize input.
-		$step    = isset( $_POST['step'] ) ? sanitize_text_field( wp_unslash( $_POST['step'] ) ) : '';
-		$page    = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 1;
+		// Increase memory limit if possible.
+		if ( function_exists( 'ini_set' ) ) {
+			@ini_set( 'memory_limit', '256M' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		}
+
+		// Sanitize and validate input.
+		$step     = isset( $_POST['step'] ) ? sanitize_text_field( wp_unslash( $_POST['step'] ) ) : '';
+		$page     = isset( $_POST['page'] ) ? max( 1, intval( $_POST['page'] ) ) : 1;
 		$sub_step = isset( $_POST['sub_step'] ) ? sanitize_text_field( wp_unslash( $_POST['sub_step'] ) ) : '';
 
 		$response = array(
@@ -169,32 +193,44 @@ class Hupuna_External_Link_Scanner_Admin {
 			'done'    => false,
 		);
 
-		switch ( $step ) {
-			case 'post_type':
-				if ( ! empty( $sub_step ) ) {
-					$scan_data = $this->scanner->scan_post_type_batch( $sub_step, $page, 20 );
+		// Process scan based on step type.
+		try {
+			switch ( $step ) {
+				case 'post_type':
+					if ( ! empty( $sub_step ) ) {
+						$scan_data = $this->scanner->scan_post_type_batch( $sub_step, $page, 20 );
+						$response['results'] = $scan_data['results'];
+						$response['done']    = $scan_data['done'];
+					} else {
+						$response['done'] = true;
+					}
+					break;
+
+				case 'comment':
+					$scan_data = $this->scanner->scan_comments_batch( $page, 50 );
 					$response['results'] = $scan_data['results'];
 					$response['done']    = $scan_data['done'];
-				} else {
+					break;
+
+				case 'option':
+					$scan_data = $this->scanner->scan_options_batch( $page, 100 );
+					$response['results'] = $scan_data['results'];
+					$response['done']    = $scan_data['done'];
+					break;
+
+				default:
 					$response['done'] = true;
-				}
-				break;
-
-			case 'comment':
-				$scan_data = $this->scanner->scan_comments_batch( $page, 50 );
-				$response['results'] = $scan_data['results'];
-				$response['done']    = $scan_data['done'];
-				break;
-
-			case 'option':
-				$scan_data = $this->scanner->scan_options_batch( $page, 100 );
-				$response['results'] = $scan_data['results'];
-				$response['done']    = $scan_data['done'];
-				break;
-
-			default:
-				$response['done'] = true;
-				break;
+					break;
+			}
+		} catch ( Exception $e ) {
+			// Log error for debugging.
+			error_log( 'Tool SEO Hupuna Scan Error: ' . $e->getMessage() );
+			
+			wp_send_json_error(
+				array(
+					'message' => __( 'An error occurred during scanning. Please try again.', 'tool-seo-hupuna' ),
+				)
+			);
 		}
 
 		wp_send_json_success( $response );
