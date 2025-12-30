@@ -46,8 +46,10 @@
             allResults = [];
             currentPage = 1;
             retryCount = 0;
+            totalImages = 0; // Reset total
             $scanButton.prop('disabled', true).html('<span class="dashicons dashicons-search"></span> ' + toolSeoHupunaImages.strings.scanning);
             $results.hide();
+            $resultsContent.empty(); // Clear previous results
             $progressWrap.show();
             
             scanNextBatch();
@@ -55,10 +57,9 @@
         
         /**
          * Scan next batch of images.
+         * PROGRESSIVE RENDERING: Display results immediately after each batch.
          */
         function scanNextBatch() {
-            updateProgress(0, toolSeoHupunaImages.strings.scanningImages + ' (' + toolSeoHupunaImages.strings.page + ' ' + currentPage + ')');
-            
             $.ajax({
                 url: toolSeoHupunaImages.ajaxUrl,
                 type: 'POST',
@@ -72,8 +73,30 @@
                     retryCount = 0; // Reset retry count on success
                     
                     if (response.success) {
+                        // Update total images count from server (first batch)
+                        if (response.data.stats && response.data.stats.total_in_db) {
+                            totalImages = response.data.stats.total_in_db;
+                        }
+                        
+                        // Calculate progress percentage
+                        var totalPages = totalImages > 0 ? Math.ceil(totalImages / 50) : 1;
+                        var progressPercent = totalPages > 0 ? Math.min((currentPage / totalPages) * 100, 95) : 0;
+                        
+                        // Update progress bar
+                        updateProgress(progressPercent, toolSeoHupunaImages.strings.scanningImages + ' (' + toolSeoHupunaImages.strings.page + ' ' + currentPage + ' / ' + totalPages + ')');
+                        
+                        // Display results immediately (progressive rendering)
                         if (response.data.results && response.data.results.length > 0) {
                             allResults = allResults.concat(response.data.results);
+                            appendResultsToTable(response.data.results);
+                        }
+                        
+                        // Update total unused count
+                        $('#total-unused-images').text(allResults.length);
+                        
+                        // Show results section if not already visible
+                        if (allResults.length > 0) {
+                            $results.show();
                         }
                         
                         if (response.data.done) {
@@ -137,52 +160,65 @@
             updateProgress(100, toolSeoHupunaImages.strings.scanCompleted);
             $scanButton.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + toolSeoHupunaImages.strings.startScan);
             
-            displayResults(allResults);
+            // Final update
+            $('#total-unused-images').text(allResults.length);
+            
+            // Show results if not already visible
+            if (allResults.length > 0) {
+                $results.show();
+            } else {
+                // Show "no results" message if table doesn't exist
+                if ($resultsContent.find('table').length === 0) {
+                    var message = '<div class="notice notice-info"><p>' + escapeHtml(toolSeoHupunaImages.strings.noImagesFound) + '</p>';
+                    message += '<p><strong>Note:</strong> This could mean either:</p>';
+                    message += '<ul style="margin-left: 20px;">';
+                    message += '<li>There are no images in your Media Library</li>';
+                    message += '<li>All images are currently being used on your site</li>';
+                    message += '</ul></div>';
+                    $resultsContent.html(message);
+                    $results.show();
+                }
+            }
         }
         
         // --- UI & Display Logic ---
         
         /**
-         * Display scan results.
-         *
-         * @param {Array} data Results data.
+         * Initialize results table (create if doesn't exist).
          */
-        function displayResults(data) {
-            allResults = data;
-            totalImages = data.length;
-            
-            $('#total-unused-images').text(totalImages);
-            
-            if (totalImages === 0) {
-                var message = '<div class="notice notice-info"><p>' + escapeHtml(toolSeoHupunaImages.strings.noImagesFound) + '</p>';
-                message += '<p><strong>Note:</strong> This could mean either:</p>';
-                message += '<ul style="margin-left: 20px;">';
-                message += '<li>There are no images in your Media Library</li>';
-                message += '<li>All images are currently being used on your site</li>';
-                message += '</ul></div>';
-                $resultsContent.html(message);
-            } else {
-                renderResultsTable();
+        function initResultsTable() {
+            if ($resultsContent.find('table').length === 0) {
+                var html = '<table class="wp-list-table widefat fixed striped tsh-table">';
+                html += '<thead><tr>';
+                html += '<th style="width: 50px;"><input type="checkbox" id="select-all-checkbox"></th>';
+                html += '<th style="width: 100px;">' + escapeHtml('Thumbnail') + '</th>';
+                html += '<th>' + escapeHtml('Filename/Path') + '</th>';
+                html += '<th style="width: 150px;">' + escapeHtml('Upload Date') + '</th>';
+                html += '<th style="width: 100px;">' + escapeHtml('Actions') + '</th>';
+                html += '</tr></thead><tbody></tbody></table>';
+                $resultsContent.html(html);
+                bindTableEvents();
             }
-            
-            $results.show();
         }
         
         /**
-         * Render results table.
+         * Append new results to existing table (progressive rendering).
+         *
+         * @param {Array} newResults New results to append.
          */
-        function renderResultsTable() {
-            var html = '<table class="wp-list-table widefat fixed striped tsh-table">';
-            html += '<thead><tr>';
-            html += '<th style="width: 50px;"><input type="checkbox" id="select-all-checkbox"></th>';
-            html += '<th style="width: 100px;">' + escapeHtml('Thumbnail') + '</th>';
-            html += '<th>' + escapeHtml('Filename/Path') + '</th>';
-            html += '<th style="width: 150px;">' + escapeHtml('Upload Date') + '</th>';
-            html += '<th style="width: 100px;">' + escapeHtml('Actions') + '</th>';
-            html += '</tr></thead><tbody>';
+        function appendResultsToTable(newResults) {
+            // Initialize table if it doesn't exist
+            initResultsTable();
             
-            $.each(allResults, function(i, item) {
-                html += '<tr data-image-id="' + item.id + '">';
+            var $tbody = $resultsContent.find('tbody');
+            
+            $.each(newResults, function(i, item) {
+                // Check if row already exists (prevent duplicates)
+                if ($tbody.find('tr[data-image-id="' + item.id + '"]').length > 0) {
+                    return;
+                }
+                
+                var html = '<tr data-image-id="' + item.id + '">';
                 html += '<td><input type="checkbox" class="image-checkbox" value="' + item.id + '"></td>';
                 html += '<td>';
                 if (item.thumbnail) {
@@ -202,13 +238,14 @@
                 html += '</button>';
                 html += '</td>';
                 html += '</tr>';
+                
+                // Append with fade-in effect
+                var $newRow = $(html).hide();
+                $tbody.append($newRow);
+                $newRow.fadeIn(200);
             });
             
-            html += '</tbody></table>';
-            
-            $resultsContent.html(html);
-            
-            // Bind events
+            // Re-bind events for new rows
             bindTableEvents();
         }
         
