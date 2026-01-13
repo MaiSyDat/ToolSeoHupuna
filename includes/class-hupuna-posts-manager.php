@@ -557,56 +557,31 @@ class Hupuna_Posts_Manager {
 	 * @param int    $post_id Post ID.
 	 * @return array Array of link data.
 	 */
-	private function extract_internal_links_from_content( $content, $post_id ) {
-		if ( empty( $content ) ) {
+	private function extract_internal_links_from_content($content, $post_id)
+	{
+		if (empty($content)) {
 			return array();
 		}
 
 		$links      = array();
 		$found_urls = array();
 
-		// Pattern 1: Find all <a> links in content.
-		preg_match_all( '/<a[^>]+href\s*=\s*["\']([^"\']+)["\'][^>]*>(.*?)<\/a>/is', $content, $all_matches, PREG_SET_ORDER );
+		// Bước 1: Quét tất cả thẻ <a> bất kể cấu trúc lồng nhau
+		// Regex này bắt URL và Anchor Text chính xác hơn
+		preg_match_all('/<a[^>]+href\s*=\s*["\']([^"\']+)["\'][^>]*>(.*?)<\/a>/is', $content, $all_matches, PREG_SET_ORDER);
 
-		// Pattern 2: Find plain text URLs (not wrapped in tags) - CRITICAL FIX.
-		$text_only = wp_strip_all_tags( $content );
-		preg_match_all( '/(https?:\/\/[^\s<>"\'\]\)]+)/i', $text_only, $plain_urls, PREG_SET_ORDER );
-		
-		// Combine both patterns.
-		$all_urls = array();
-		foreach ( $all_matches as $match ) {
-			$all_urls[] = array( 'url' => trim( $match[1] ), 'text' => strip_tags( $match[2] ), 'is_tag' => true );
-		}
-		foreach ( $plain_urls as $match ) {
-			$url = trim( $match[1], '.,;:!?)' );
-			// Only add if not already in anchor tags.
-			$exists = false;
-			foreach ( $all_urls as $existing ) {
-				if ( $existing['url'] === $url ) {
-					$exists = true;
-					break;
-				}
-			}
-			if ( ! $exists ) {
-				$all_urls[] = array( 'url' => $url, 'text' => '', 'is_tag' => false );
-			}
-		}
+		foreach ($all_matches as $url_data) {
+			$url       = trim($url_data[1]);
+			$link_text = strip_tags($url_data[2]); // Lấy text kể cả khi nằm trong <strong><em>
 
-		if ( empty( $all_urls ) ) {
-			return array();
-		}
-
-		foreach ( $all_urls as $url_data ) {
-			$url       = trim( $url_data['url'] );
-			$link_text = $url_data['is_tag'] ? strip_tags( $url_data['text'] ) : '';
-
-			// Skip if already processed.
-			if ( in_array( $url, $found_urls, true ) ) {
+			// Chuẩn hóa URL
+			$normalized_url = $this->normalize_url_for_comparison($url);
+			if (empty($normalized_url) || in_array($normalized_url, $found_urls, true)) {
 				continue;
 			}
 
-			// Skip mailto, tel, javascript, #.
-			if ( preg_match( '/^(mailto:|tel:|javascript:|#)/i', $url ) ) {
+			// Bỏ qua các giao thức không cần thiết
+			if (preg_match('/^(mailto:|tel:|javascript:|#)/i', $normalized_url)) {
 				continue;
 			}
 
@@ -614,139 +589,54 @@ class Hupuna_Posts_Manager {
 			$link_id   = null;
 			$link_name = '';
 
-			// Check URL contains post ID (?p=).
-			if ( preg_match( '/(?:p=)(\d+)/', $url, $id_match ) ) {
-				$link_id         = intval( $id_match[1] );
-				$linked_post_type = get_post_type( $link_id );
-
-				if ( $linked_post_type === 'product' && function_exists( 'wc_get_product' ) ) {
-					$product = wc_get_product( $link_id );
-					if ( $product ) {
-						$link_type = 'product';
-						$link_name = $product->get_name();
-					}
-				} elseif ( $linked_post_type === 'post' ) {
-					$link_type = 'post';
-					$link_name = get_the_title( $link_id );
-				}
+			// Bước 2: Nhận diện loại link (Giữ nguyên logic cũ nhưng thêm fallback)
+			if (preg_match('/(?:p=)(\d+)/', $normalized_url, $id_match)) {
+				$link_id = intval($id_match[1]);
+				$linked_post_type = get_post_type($link_id);
+				if ($linked_post_type === 'product') $link_type = 'product';
+				elseif ($linked_post_type === 'post') $link_type = 'post';
 			} else {
-				// Parse URL to determine link type.
-				$parsed_url = wp_parse_url( $url );
-				$path       = isset( $parsed_url['path'] ) ? trim( $parsed_url['path'], '/' ) : '';
+				// Thử tìm qua slug/path
+				$parsed_url = wp_parse_url($normalized_url);
+				$path = isset($parsed_url['path']) ? trim($parsed_url['path'], '/') : '';
 
-				if ( empty( $path ) ) {
-					continue;
-				}
-
-				$path_parts = explode( '/', $path );
-
-				// Check category/tag.
-				$term = null;
-				foreach ( $path_parts as $part ) {
-					if ( ! empty( $part ) ) {
-						$term = get_term_by( 'slug', $part, 'product_cat' );
-						if ( $term ) {
+				if (! empty($path)) {
+					// Kiểm tra xem có phải sản phẩm/bài viết/danh mục không
+					$post_obj = get_page_by_path($path, OBJECT, array('post', 'product', 'page'));
+					if ($post_obj) {
+						$link_id = $post_obj->ID;
+						$link_type = get_post_type($link_id);
+					} else {
+						// Kiểm tra danh mục sản phẩm
+						$path_parts = explode('/', $path);
+						$slug = end($path_parts);
+						$term = get_term_by('slug', $slug, 'product_cat');
+						if ($term) {
+							$link_id = $term->term_id;
 							$link_type = 'product_cat';
-							$link_id   = $term->term_id;
-							$link_name = $term->name;
-							break;
-						}
-
-						$term = get_term_by( 'slug', $part, 'product_tag' );
-						if ( $term ) {
-							$link_type = 'product_cat';
-							$link_id   = $term->term_id;
-							$link_name = $term->name;
-							break;
-						}
-					}
-				}
-
-				// If not category, try product or post.
-				if ( $link_type === 'other' ) {
-					$slug = end( $path_parts );
-
-					if ( $slug && ! empty( $slug ) ) {
-						$post_obj = get_page_by_path( $path, OBJECT, 'product' );
-						if ( ! $post_obj && $slug ) {
-							$post_obj = get_page_by_path( $slug, OBJECT, 'product' );
-						}
-
-						if ( $post_obj ) {
-							$link_id = $post_obj->ID;
-							if ( get_post_type( $link_id ) === 'product' && function_exists( 'wc_get_product' ) ) {
-								$product = wc_get_product( $link_id );
-								if ( $product ) {
-									$link_type = 'product';
-									$link_name = $product->get_name();
-								}
-							}
-						} else {
-							$post_obj = get_page_by_path( $path, OBJECT, 'post' );
-							if ( ! $post_obj && $slug ) {
-								$post_obj = get_page_by_path( $slug, OBJECT, 'post' );
-							}
-
-							if ( $post_obj ) {
-								$link_id = $post_obj->ID;
-								if ( get_post_type( $link_id ) === 'post' ) {
-									$link_type = 'post';
-									$link_name = get_the_title( $link_id );
-								}
-							} else {
-								$query_link = new WP_Query(
-									array(
-										'name'           => $slug,
-										'post_type'      => array( 'product', 'post' ),
-										'posts_per_page' => 1,
-									)
-								);
-								if ( $query_link->have_posts() ) {
-									$query_link->the_post();
-									$link_id         = get_the_ID();
-									$linked_post_type = get_post_type( $link_id );
-
-									if ( $linked_post_type === 'product' && function_exists( 'wc_get_product' ) ) {
-										$product = wc_get_product( $link_id );
-										if ( $product ) {
-											$link_type = 'product';
-											$link_name = $product->get_name();
-										}
-									} elseif ( $linked_post_type === 'post' ) {
-										$link_type = 'post';
-										$link_name = get_the_title( $link_id );
-									}
-									wp_reset_postdata();
-								}
-							}
 						}
 					}
 				}
 			}
 
-			// Normalize URL for comparison.
-			$normalized_url = $this->normalize_url_for_comparison( $url );
-			
-			// Add link if it's internal (product, product_cat, post) OR external.
-			if ( in_array( $link_type, array( 'product', 'product_cat', 'post' ), true ) && $link_id ) {
-				// Internal link.
+			// Bước 3: FIX QUAN TRỌNG - Nếu không xác định được ID nhưng vẫn là nội bộ hoặc link cần quản lý
+			// Chúng ta vẫn cho hiện thị dưới dạng 'post' hoặc 'external' thay vì bỏ qua hoàn toàn
+			if (! $this->is_external_url($normalized_url)) {
 				$links[] = array(
 					'url'  => $normalized_url,
-					'text' => trim( $link_text ) ?: $link_name ?: $normalized_url,
-					'type' => $link_type,
+					'text' => trim($link_text) ?: $normalized_url,
+					'type' => ($link_type !== 'other') ? $link_type : 'post',
 					'id'   => $link_id,
 				);
-				$found_urls[] = $normalized_url;
-			} elseif ( $this->is_external_url( $normalized_url ) ) {
-				// External link - add it too!
+			} else {
 				$links[] = array(
 					'url'  => $normalized_url,
-					'text' => trim( $link_text ) ?: $normalized_url,
+					'text' => trim($link_text) ?: $normalized_url,
 					'type' => 'external',
 					'id'   => null,
 				);
-				$found_urls[] = $normalized_url;
 			}
+			$found_urls[] = $normalized_url;
 		}
 
 		return $links;
