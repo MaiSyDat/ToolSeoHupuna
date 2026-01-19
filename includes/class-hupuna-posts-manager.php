@@ -39,10 +39,6 @@ class Hupuna_Posts_Manager {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
-		if ( 'tool-seo_page_tool-seo-hupuna-posts-with-links' !== $hook ) {
-			return;
-		}
-
 		// Enqueue JS
 		wp_enqueue_script(
 			'tool-seo-hupuna-posts',

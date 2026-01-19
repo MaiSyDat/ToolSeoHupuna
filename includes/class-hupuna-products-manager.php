@@ -65,9 +65,10 @@ class Hupuna_Products_Manager {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
-		if ( 'tool-seo_page_tool-seo-hupuna-product-prices' !== $hook ) {
-			return;
-		}
+		// DEBUG: Temporarily force load
+		// if ( 'tool-seo_page_tool-seo-hupuna-product-prices' !== $hook ) {
+		// 	return;
+		// }
 
 		// Enqueue CSS
 		wp_enqueue_style(
