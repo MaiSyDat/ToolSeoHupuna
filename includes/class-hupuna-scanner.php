@@ -165,6 +165,18 @@ class Hupuna_External_Link_Scanner {
 			return array();
 		}
 
+		// PERFORMANCE: Limit content length to prevent regex timeout on extremely long posts.
+		// Allow filtering for custom limits.
+		$max_length = apply_filters( 'tool_seo_hupuna_scan_content_limit', 50000 );
+		
+		if ( strlen( $content ) > $max_length ) {
+			// Truncate content for scanning and log a warning.
+			$content = substr( $content, 0, $max_length );
+			
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( sprintf( 'Tool SEO Hupuna: Content truncated to %d characters for link scanning to prevent timeout.', $max_length ) );
+		}
+
 		$links = array();
 		$found_urls = array(); // Track URLs to avoid duplicates.
 

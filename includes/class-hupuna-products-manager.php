@@ -30,6 +30,7 @@ class Hupuna_Products_Manager {
 	 */
 	private function init_hooks() {
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_get_product_prices', array( $this, 'ajax_get_product_prices' ) );
 		add_action( 'wp_ajax_update_product_price', array( $this, 'ajax_update_product_price' ) );
 		add_action( 'wp_ajax_update_multiple_prices', array( $this, 'ajax_update_multiple_prices' ) );
@@ -58,6 +59,67 @@ class Hupuna_Products_Manager {
 	}
 
 	/**
+	 * Enqueue admin scripts and styles.
+	 *
+	 * @param string $hook Current admin page hook.
+	 * @return void
+	 */
+	public function enqueue_scripts( $hook ) {
+		if ( 'tool-seo_page_tool-seo-hupuna-product-prices' !== $hook ) {
+			return;
+		}
+
+		// Enqueue CSS
+		wp_enqueue_style(
+			'tool-seo-hupuna-products',
+			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/css/products-manager.css',
+			array(),
+			TOOL_SEO_HUPUNA_VERSION
+		);
+
+		// Enqueue JS
+		wp_enqueue_script(
+			'tool-seo-hupuna-products',
+			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/js/products-manager.js',
+			array( 'jquery' ),
+			TOOL_SEO_HUPUNA_VERSION,
+			true
+		);
+
+		// Localize script data
+		wp_localize_script(
+			'tool-seo-hupuna-products',
+			'hupunaProductsManager',
+			array(
+				'currentPage' => 1,
+				'lastSearch'  => '',
+				'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+				'nonce'       => wp_create_nonce( 'tool_seo_hupuna_products_manager_nonce' ),
+				'strings'     => array(
+					'loading'       => __( 'Loading...', 'tool-seo-hupuna' ),
+					'noProducts'    => __( 'No products found.', 'tool-seo-hupuna' ),
+					'saving'        => __( 'Saving...', 'tool-seo-hupuna' ),
+					'saved'         => __( 'Saved', 'tool-seo-hupuna' ),
+					'error'         => __( 'Error!', 'tool-seo-hupuna' ),
+					'confirmDelete' => __( 'Are you sure you want to delete this product?', 'tool-seo-hupuna' ),
+					'variant'       => __( 'Variant', 'tool-seo-hupuna' ),
+					'simple'        => __( 'Simple', 'tool-seo-hupuna' ),
+					'save'          => __( 'Save', 'tool-seo-hupuna' ),
+					'saveAll'       => __( 'Save All', 'tool-seo-hupuna' ),
+					'delete'        => __( 'Delete', 'tool-seo-hupuna' ),
+					'view'          => __( 'View', 'tool-seo-hupuna' ),
+					'prev'          => __( 'Previous', 'tool-seo-hupuna' ),
+					'next'          => __( 'Next', 'tool-seo-hupuna' ),
+					'page'          => __( 'Page', 'tool-seo-hupuna' ),
+					'of'            => __( 'of', 'tool-seo-hupuna' ),
+					'regularPrice'  => __( 'Regular Price', 'tool-seo-hupuna' ),
+					'salePrice'     => __( 'Sale Price', 'tool-seo-hupuna' ),
+				),
+			)
+		);
+	}
+
+	/**
 	 * Render admin page.
 	 *
 	 * @return void
@@ -81,327 +143,9 @@ class Hupuna_Products_Manager {
 					<button id="tsh-products-search-btn" class="button button-primary"><?php echo esc_html__( 'Search', 'tool-seo-hupuna' ); ?></button>
 				</p>
 			</div>
-			<table id="tsh-price-table" class="wp-list-table widefat fixed striped tsh-table">
-				<thead>
-					<tr>
-						<th><?php echo esc_html__( 'Name', 'tool-seo-hupuna' ); ?></th>
-						<th><?php echo esc_html__( 'Variant', 'tool-seo-hupuna' ); ?></th>
-						<th><?php echo esc_html__( 'Type', 'tool-seo-hupuna' ); ?></th>
-						<th><?php echo esc_html__( 'Regular Price', 'tool-seo-hupuna' ); ?></th>
-						<th><?php echo esc_html__( 'Sale Price', 'tool-seo-hupuna' ); ?></th>
-						<th style="width: 200px;"><?php echo esc_html__( 'Actions', 'tool-seo-hupuna' ); ?></th>
-						<th style="width: 100px;"><?php echo esc_html__( 'View', 'tool-seo-hupuna' ); ?></th>
-					</tr>
-				</thead>
-				<tbody id="tsh-price-table-body">
-					<tr>
-						<td colspan="7"><?php echo esc_html__( 'Loading...', 'tool-seo-hupuna' ); ?></td>
-					</tr>
-				</tbody>
-			</table>
+			<div id="tsh-products-container"></div>
 			<div id="tsh-products-pagination" class="mt-3"></div>
 		</div>
-
-		<script>
-		var hupunaProductsManager = {
-			currentPage: 1,
-			lastSearch: '',
-			ajaxUrl: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
-			nonce: '<?php echo esc_js( wp_create_nonce( 'tool_seo_hupuna_products_manager_nonce' ) ); ?>',
-			strings: {
-				loading: '<?php echo esc_js( __( 'Loading...', 'tool-seo-hupuna' ) ); ?>',
-				noProducts: '<?php echo esc_js( __( 'No products found.', 'tool-seo-hupuna' ) ); ?>',
-				saving: '<?php echo esc_js( __( 'Saving...', 'tool-seo-hupuna' ) ); ?>',
-				saved: '<?php echo esc_js( __( 'Saved', 'tool-seo-hupuna' ) ); ?>',
-				error: '<?php echo esc_js( __( 'Error!', 'tool-seo-hupuna' ) ); ?>',
-				confirmDelete: '<?php echo esc_js( __( 'Are you sure you want to delete this product?', 'tool-seo-hupuna' ) ); ?>',
-				variant: '<?php echo esc_js( __( 'Variant', 'tool-seo-hupuna' ) ); ?>',
-				simple: '<?php echo esc_js( __( 'Simple', 'tool-seo-hupuna' ) ); ?>',
-				save: '<?php echo esc_js( __( 'Save', 'tool-seo-hupuna' ) ); ?>',
-				saveAll: '<?php echo esc_js( __( 'Save All', 'tool-seo-hupuna' ) ); ?>',
-				delete: '<?php echo esc_js( __( 'Delete', 'tool-seo-hupuna' ) ); ?>',
-				view: '<?php echo esc_js( __( 'View', 'tool-seo-hupuna' ) ); ?>',
-				prev: '<?php echo esc_js( __( 'Previous', 'tool-seo-hupuna' ) ); ?>',
-				next: '<?php echo esc_js( __( 'Next', 'tool-seo-hupuna' ) ); ?>',
-				page: '<?php echo esc_js( __( 'Page', 'tool-seo-hupuna' ) ); ?>',
-				of: '<?php echo esc_js( __( 'of', 'tool-seo-hupuna' ) ); ?>',
-				regularPrice: '<?php echo esc_js( __( 'Regular Price', 'tool-seo-hupuna' ) ); ?>',
-				salePrice: '<?php echo esc_js( __( 'Sale Price', 'tool-seo-hupuna' ) ); ?>'
-			}
-		};
-
-		function loadPage(page, search) {
-			hupunaProductsManager.lastSearch = search;
-			var tbody = document.getElementById('tsh-price-table-body');
-			tbody.innerHTML = '<tr><td colspan="7">' + hupunaProductsManager.strings.loading + '</td></tr>';
-
-			var formData = new FormData();
-			formData.append('action', 'get_product_prices');
-			formData.append('nonce', hupunaProductsManager.nonce);
-			formData.append('page', page);
-			formData.append('search', search);
-
-			fetch(hupunaProductsManager.ajaxUrl, {
-				method: 'POST',
-				body: formData
-			})
-			.then(res => res.json())
-			.then(data => {
-				tbody.innerHTML = '';
-				if (!data.success || data.data.products.length === 0) {
-					tbody.innerHTML = '<tr><td colspan="7">' + hupunaProductsManager.strings.noProducts + '</td></tr>';
-					renderPagination(page, 0);
-					return;
-				}
-
-				data.data.products.forEach(function(p) {
-					if (p.type === hupunaProductsManager.strings.variant) {
-						p.variants.forEach(function(v, i) {
-							var tr = document.createElement('tr');
-							tr.innerHTML = '<td>' + (i === 0 ? '<textarea class="tsh-edit-name" data-id="' + p.id + '" style="width: 100%; height: 100px;">' + escapeHtml(p.name) + '</textarea>' : '') + '</td>' +
-								'<td style="padding:6px;">' + escapeHtml(v.name) + '</td>' +
-								'<td style="padding:6px;">' + escapeHtml(p.type) + '</td>' +
-								'<td style="padding:6px;"><input type="number" value="' + (v.regular_price || '') + '" data-id="' + v.id + '" data-type="regular" placeholder="' + hupunaProductsManager.strings.regularPrice + '" style="width:100px;"/></td>' +
-								'<td style="padding:6px;"><input type="number" value="' + (v.sale_price || '') + '" data-id="' + v.id + '" data-type="sale" placeholder="' + hupunaProductsManager.strings.salePrice + '" style="width:100px;"/></td>' +
-								'<td style="padding:6px; white-space: nowrap;"><div style="display: flex; gap: 5px; flex-wrap: wrap;">' + (i === 0 ? '<button class="tsh-delete-btn button tsh-button-link-delete" data-id="' + p.id + '">' + hupunaProductsManager.strings.delete + '</button><button class="tsh-save-all-btn button button-primary" data-id="' + p.id + '">' + hupunaProductsManager.strings.saveAll + '</button>' : '<button class="tsh-save-btn button button-primary" data-id="' + v.id + '">' + hupunaProductsManager.strings.save + '</button>') + '</div></td>' +
-								'<td style="padding:6px; width: 100px; text-align: center;">' + (i === 0 ? '<a href="' + escapeHtml(p.permalink || '/?p=' + p.id) + '" target="_blank" class="button button-small">' + hupunaProductsManager.strings.view + '</a>' : '') + '</td>';
-							tbody.appendChild(tr);
-						});
-					} else {
-						var tr = document.createElement('tr');
-						tr.innerHTML = '<td><textarea class="tsh-edit-name" data-id="' + p.id + '" style="width: 100%; height: 100px;">' + escapeHtml(p.name) + '</textarea></td>' +
-							'<td style="padding:6px;">-</td>' +
-							'<td style="padding:6px;">' + escapeHtml(p.type) + '</td>' +
-							'<td style="padding:6px;"><input type="number" value="' + (p.regular_price || '') + '" data-id="' + p.id + '" data-type="regular" placeholder="' + hupunaProductsManager.strings.regularPrice + '" style="width:100px;" /></td>' +
-							'<td style="padding:6px;"><input type="number" value="' + (p.sale_price || '') + '" data-id="' + p.id + '" data-type="sale" placeholder="' + hupunaProductsManager.strings.salePrice + '" style="width:100px;" /></td>' +
-							'<td style="padding:6px; white-space: nowrap;"><div style="display: flex; gap: 5px; flex-wrap: wrap;"><button class="tsh-delete-btn button tsh-button-link-delete" data-id="' + p.id + '">' + hupunaProductsManager.strings.delete + '</button><button class="tsh-save-btn button button-primary" data-id="' + p.id + '">' + hupunaProductsManager.strings.save + '</button></div></td>' +
-							'<td style="padding:6px; width: 100px; text-align: center;"><a href="' + escapeHtml(p.permalink || '/?p=' + p.id) + '" target="_blank" class="button button-small">' + hupunaProductsManager.strings.view + '</a></td>';
-						tbody.appendChild(tr);
-					}
-				});
-
-				attachEventHandlers();
-				var totalPages = Math.ceil(data.data.total / data.data.per_page);
-				renderPagination(page, totalPages);
-				hupunaProductsManager.currentPage = page;
-			})
-			.catch(err => {
-				tbody.innerHTML = '<tr><td colspan="7">Error: ' + err.message + '</td></tr>';
-			});
-		}
-
-		function attachEventHandlers() {
-			// Save single price
-			document.querySelectorAll('.tsh-save-btn').forEach(function(btn) {
-				btn.addEventListener('click', function() {
-					var productId = this.dataset.id;
-					var row = this.closest('tr');
-					var regularInput = row.querySelector('input[data-type="regular"]');
-					var saleInput = row.querySelector('input[data-type="sale"]');
-
-					if (!regularInput) return;
-
-					var regular_price = regularInput.value || '';
-					var sale_price = saleInput ? saleInput.value || '' : '';
-
-					var originalText = this.textContent;
-					this.disabled = true;
-					this.textContent = hupunaProductsManager.strings.saving;
-
-					var formData = new FormData();
-					formData.append('action', 'update_product_price');
-					formData.append('nonce', hupunaProductsManager.nonce);
-					formData.append('id', productId);
-					formData.append('regular_price', regular_price);
-					formData.append('sale_price', sale_price);
-
-					fetch(hupunaProductsManager.ajaxUrl, {
-						method: 'POST',
-						body: formData
-					})
-					.then(r => r.json())
-					.then(data => {
-						this.textContent = data.success ? '✓ ' + hupunaProductsManager.strings.saved : hupunaProductsManager.strings.error;
-						setTimeout(function() {
-							this.textContent = originalText;
-							this.disabled = false;
-						}.bind(this), 2000);
-					})
-					.catch(() => {
-						this.textContent = hupunaProductsManager.strings.error;
-						setTimeout(function() {
-							this.textContent = originalText;
-							this.disabled = false;
-						}.bind(this), 2000);
-					});
-				});
-			});
-
-			// Save all variants
-			document.querySelectorAll('.tsh-save-all-btn').forEach(function(btn) {
-				btn.addEventListener('click', function() {
-					var productId = this.dataset.id;
-					var regularInputs = document.querySelectorAll('input[data-type="regular"]');
-					var saleInputs = document.querySelectorAll('input[data-type="sale"]');
-					var updates = [];
-
-					regularInputs.forEach(function(input, i) {
-						var id = input.dataset.id;
-						var regular_price = input.value || '';
-						var sale_price = saleInputs[i] ? saleInputs[i].value || '' : '';
-
-						if (id) {
-							updates.push({
-								id: id,
-								regular_price: regular_price,
-								sale_price: sale_price
-							});
-						}
-					});
-
-					var originalText = this.textContent;
-					this.disabled = true;
-					this.textContent = hupunaProductsManager.strings.saving;
-
-					var formData = new FormData();
-					formData.append('action', 'update_multiple_prices');
-					formData.append('nonce', hupunaProductsManager.nonce);
-					formData.append('updates', JSON.stringify(updates));
-
-					fetch(hupunaProductsManager.ajaxUrl, {
-						method: 'POST',
-						body: formData
-					})
-					.then(r => r.json())
-					.then(data => {
-						this.textContent = data.success ? '✓ ' + hupunaProductsManager.strings.saved : hupunaProductsManager.strings.error;
-						setTimeout(function() {
-							this.textContent = originalText;
-							this.disabled = false;
-						}.bind(this), 2000);
-					})
-					.catch(() => {
-						this.textContent = hupunaProductsManager.strings.error;
-						setTimeout(function() {
-							this.textContent = originalText;
-							this.disabled = false;
-						}.bind(this), 2000);
-					});
-				});
-			});
-
-			// Update product name
-			document.querySelectorAll('.tsh-edit-name').forEach(function(textarea) {
-				textarea.addEventListener('blur', function() {
-					var id = this.dataset.id;
-					var name = this.value;
-
-					var formData = new FormData();
-					formData.append('action', 'update_product_name');
-					formData.append('nonce', hupunaProductsManager.nonce);
-					formData.append('id', id);
-					formData.append('name', name);
-
-					fetch(hupunaProductsManager.ajaxUrl, {
-						method: 'POST',
-						body: formData
-					})
-					.then(r => r.json())
-					.then(data => {
-						if (!data.success) {
-							alert('❌ ' + (data.data && data.data.message ? data.data.message : 'Error updating product name'));
-						}
-					})
-					.catch(() => {
-						alert('❌ Error updating product name');
-					});
-				});
-			});
-
-			// Delete product
-			document.querySelectorAll('.tsh-delete-btn').forEach(function(btn) {
-				btn.addEventListener('click', function() {
-					if (!confirm(hupunaProductsManager.strings.confirmDelete)) return;
-
-					var id = this.dataset.id;
-					var row = this.closest('tr');
-
-					var formData = new FormData();
-					formData.append('action', 'delete_product');
-					formData.append('nonce', hupunaProductsManager.nonce);
-					formData.append('id', id);
-
-					fetch(hupunaProductsManager.ajaxUrl, {
-						method: 'POST',
-						body: formData
-					})
-					.then(r => r.json())
-					.then(data => {
-						if (data.success) {
-							alert(data.data && data.data.message ? data.data.message : 'Product deleted');
-							loadPage(hupunaProductsManager.currentPage, hupunaProductsManager.lastSearch);
-						} else {
-							alert(data.data && data.data.message ? data.data.message : 'Error deleting product');
-						}
-					})
-					.catch(err => {
-						alert('Error: ' + err.message);
-					});
-				});
-			});
-		}
-
-		function renderPagination(page, totalPages) {
-			var pagination = document.getElementById('tsh-products-pagination');
-			pagination.innerHTML = '';
-			if (totalPages <= 1) return;
-
-			function createButton(label, pageNum, disabled) {
-				var btn = document.createElement('button');
-				btn.textContent = label;
-				btn.className = 'button';
-				btn.style.margin = '0 2px';
-				if (label === page.toString()) {
-					btn.className += ' button-primary';
-					btn.disabled = true;
-				}
-				btn.disabled = disabled || false;
-				btn.onclick = function() { loadPage(pageNum, hupunaProductsManager.lastSearch); };
-				return btn;
-			}
-
-			if (page > 1) pagination.appendChild(createButton(hupunaProductsManager.strings.prev, page - 1));
-			for (var i = 1; i <= totalPages; i++) {
-				if (i === 1 || i === totalPages || Math.abs(i - page) <= 1) {
-					pagination.appendChild(createButton(i, i, i === page));
-				} else if ((i === 2 && page > 3) || (i === totalPages - 1 && page < totalPages - 2)) {
-					var dots = document.createElement('span');
-					dots.textContent = '...';
-					dots.style.margin = '0 5px';
-					pagination.appendChild(dots);
-				}
-			}
-			if (page < totalPages) pagination.appendChild(createButton(hupunaProductsManager.strings.next, page + 1));
-		}
-
-		function escapeHtml(text) {
-			var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-			return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
-		}
-
-		document.getElementById('tsh-products-search-btn').addEventListener('click', function() {
-			loadPage(1, document.getElementById('tsh-products-search-input').value);
-		});
-
-		document.getElementById('tsh-products-search-input').addEventListener('keydown', function(e) {
-			if (e.key === 'Enter') {
-				e.preventDefault();
-				loadPage(1, this.value);
-			}
-		});
-
-		loadPage(1, '');
-		</script>
 		<?php
 	}
 
@@ -412,90 +156,133 @@ class Hupuna_Products_Manager {
 	 * @return void
 	 */
 	public function ajax_get_product_prices() {
+		global $wpdb;
+		
 		check_ajax_referer( 'tool_seo_hupuna_products_manager_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access denied', 'tool-seo-hupuna' ) ) );
 		}
 
-		if ( ! class_exists( 'WooCommerce' ) ) {
+		if ( ! class_exists( 'WooCommerce' ) || ! function_exists( 'wc_get_product' ) ) {
 			wp_send_json_error( array( 'message' => __( 'WooCommerce is required', 'tool-seo-hupuna' ) ) );
 		}
 
 		$page     = max( 1, intval( isset( $_POST['page'] ) ? $_POST['page'] : 1 ) );
 		$search   = trim( sanitize_text_field( isset( $_POST['search'] ) ? $_POST['search'] : '' ) );
 		$per_page = 20;
+		$offset   = ( $page - 1 ) * $per_page;
 
-		// Build WooCommerce query args with database-level pagination.
-		$args = array(
-			'status'   => 'publish',
-			'limit'    => $per_page,
-			'page'     => $page,
-			'paginate' => true, // Enable pagination support.
-			'type'     => array( 'simple', 'variable' ),
-			'orderby'  => 'ID',
-			'order'    => 'DESC',
+		// Build SQL query - ONLY query parent products (not variations) to avoid duplicates.
+		$where_clauses = array();
+		$where_clauses[] = "p.post_type = 'product'"; // Only parent products
+		$where_clauses[] = "p.post_status = 'publish'";
+
+		$sql_params = array();
+
+		// Add search filter if provided - search across title, content, SKU, and variation meta.
+		if ( ! empty( $search ) ) {
+			$search_like = '%' . $wpdb->esc_like( $search ) . '%';
+			
+			// Search in: post_title, post_content, SKU meta, variation SKU, or variation attributes.
+			$where_clauses[] = "(
+				p.post_title LIKE %s 
+				OR p.post_content LIKE %s 
+				OR EXISTS (
+					SELECT 1 FROM {$wpdb->postmeta} pm 
+					WHERE pm.post_id = p.ID 
+					AND pm.meta_key = '_sku' 
+					AND pm.meta_value LIKE %s
+				)
+				OR EXISTS (
+					SELECT 1 FROM {$wpdb->posts} variations
+					LEFT JOIN {$wpdb->postmeta} pm2 ON variations.ID = pm2.post_id
+					WHERE variations.post_parent = p.ID
+					AND variations.post_type = 'product_variation'
+					AND (
+						pm2.meta_key = '_sku' AND pm2.meta_value LIKE %s
+						OR pm2.meta_key LIKE 'attribute_%' AND pm2.meta_value LIKE %s
+					)
+				)
+			)";
+			
+			$sql_params[] = $search_like;
+			$sql_params[] = $search_like;
+			$sql_params[] = $search_like;
+			$sql_params[] = $search_like;
+			$sql_params[] = $search_like;
+		}
+
+		$where_sql = implode( ' AND ', $where_clauses );
+
+		// Query with SQL_CALC_FOUND_ROWS for accurate pagination.
+		$query = $wpdb->prepare(
+			"SELECT SQL_CALC_FOUND_ROWS p.ID, p.post_title, p.post_type
+			FROM {$wpdb->posts} p
+			WHERE $where_sql
+			ORDER BY p.ID DESC
+			LIMIT %d OFFSET %d",
+			array_merge( $sql_params, array( $per_page, $offset ) )
 		);
 
-		// Use WooCommerce built-in search for database-level filtering.
-		if ( ! empty( $search ) ) {
-			$args['search'] = $search;
-		}
+		// Execute query.
+		$products = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
-		// Execute query with pagination.
-		$products_query = wc_get_products( $args );
+		// Get total count for pagination.
+		$total = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 
-		// Check if query returned pagination object.
-		if ( ! is_object( $products_query ) || ! isset( $products_query->products ) ) {
-			wp_send_json_success(
-				array(
-					'products' => array(),
-					'total'    => 0,
-					'per_page' => $per_page,
-					'page'     => $page,
-				)
-			);
-		}
-
-		$products      = $products_query->products;
-		$total_products = $products_query->total;
 		$grouped_products = array();
 
-		// Process only the products from current page.
-		foreach ( $products as $product ) {
-			if ( $product->is_type( 'variable' ) ) {
-				// Load variants only for products on current page (optimize N+1).
-				$variants = $this->get_product_variants( $product, $search );
-
-				if ( ! empty( $variants ) ) {
+		if ( ! empty( $products ) ) {
+			foreach ( $products as $product_data ) {
+				$product_id = (int) $product_data->ID;
+				
+				// Check if this is a variable product.
+				$has_variations = $wpdb->get_var( $wpdb->prepare(
+					"SELECT COUNT(*) FROM {$wpdb->posts} 
+					WHERE post_parent = %d AND post_type = 'product_variation'",
+					$product_id
+				) );
+				
+				if ( $has_variations > 0 ) {
+					// Variable product - get all variants.
+					$product = wc_get_product( $product_id );
+					if ( ! $product ) {
+						continue;
+					}
+					
+					$variants = $this->get_product_variants_optimized( $product_id, $search );
+					
+					if ( ! empty( $variants ) ) {
+						$grouped_products[] = array(
+							'id'        => $product_id,
+							'name'      => $product->get_name(),
+							'type'      => __( 'Variant', 'tool-seo-hupuna' ),
+							'permalink' => get_permalink( $product_id ),
+							'variants'  => $variants,
+						);
+					}
+				} else {
+					// Simple product - get prices from meta.
+					$regular_price = get_post_meta( $product_id, '_regular_price', true );
+					$sale_price = get_post_meta( $product_id, '_sale_price', true );
+					
 					$grouped_products[] = array(
-						'id'        => $product->get_id(),
-						'name'      => $product->get_name(),
-						'type'      => __( 'Variant', 'tool-seo-hupuna' ),
-						'permalink' => get_permalink( $product->get_id() ),
-						'variants'  => $variants,
+						'id'            => $product_id,
+						'name'          => $product_data->post_title,
+						'type'          => __( 'Simple', 'tool-seo-hupuna' ),
+						'permalink'     => get_permalink( $product_id ),
+						'regular_price' => $regular_price,
+						'sale_price'    => $sale_price,
 					);
 				}
-			} else {
-				// Simple product - already filtered by WooCommerce search.
-				$grouped_products[] = array(
-					'id'            => $product->get_id(),
-					'name'          => $product->get_name(),
-					'type'          => __( 'Simple', 'tool-seo-hupuna' ),
-					'permalink'     => get_permalink( $product->get_id() ),
-					'regular_price' => $product->get_regular_price(),
-					'sale_price'    => $product->get_sale_price(),
-				);
 			}
 		}
-
-		// Calculate total pages.
-		$total_pages = ceil( $total_products / $per_page );
 
 		wp_send_json_success(
 			array(
 				'products' => $grouped_products,
-				'total'    => $total_products,
+				'total'    => $total,
 				'per_page' => $per_page,
 				'page'     => $page,
 			)
@@ -503,57 +290,50 @@ class Hupuna_Products_Manager {
 	}
 
 	/**
-	 * Get product variants with optimized loading.
-	 * Only loads variants for products on the current page.
+	 * Get product variants with optimized SQL query.
+	 * Shows ALL variants when parent product matches search.
 	 *
-	 * @param WC_Product_Variable $product Product object.
-	 * @param string               $search  Search term (optional).
+	 * @param int    $parent_id Parent product ID.
+	 * @param string $search    Search term (NOT used for filtering variants).
 	 * @return array Array of variant data.
 	 */
-	private function get_product_variants( $product, $search = '' ) {
-		if ( ! $product->is_type( 'variable' ) ) {
+	private function get_product_variants_optimized( $parent_id, $search = '' ) {
+		global $wpdb;
+		
+		$variants = array();
+		
+		// Get all variation IDs for this parent using direct SQL.
+		$variation_ids = $wpdb->get_col( $wpdb->prepare(
+			"SELECT ID FROM {$wpdb->posts} 
+			WHERE post_parent = %d 
+			AND post_type = 'product_variation' 
+			AND post_status = 'publish'
+			ORDER BY ID ASC",
+			$parent_id
+		) );
+		
+		if ( empty( $variation_ids ) ) {
 			return array();
 		}
-
-		$variants = array();
-		$child_ids = $product->get_children();
-
-		// Batch load all variant products to avoid N+1 queries.
-		// WooCommerce will cache these internally.
-		$variant_products = array();
-		foreach ( $child_ids as $child_id ) {
-			$variant_products[ $child_id ] = wc_get_product( $child_id );
-		}
-
-		// Process variants.
-		foreach ( $variant_products as $child_id => $child ) {
-			if ( ! $child || ! is_a( $child, 'WC_Product_Variation' ) ) {
+		
+		// Load ALL variants without filtering - parent already matched search.
+		foreach ( $variation_ids as $variation_id ) {
+			$variation = wc_get_product( $variation_id );
+			
+			if ( ! $variation || ! is_a( $variation, 'WC_Product_Variation' ) ) {
 				continue;
 			}
-
-			$variant_name = $this->format_variant_name( $child );
-
-			// If search is provided, filter variants (search already filtered parent products).
-			if ( ! empty( $search ) ) {
-				$search_lower = strtolower( $search );
-				$variant_name_lower = strtolower( $variant_name );
-				$product_name_lower = strtolower( $product->get_name() );
-
-				// Skip variant if it doesn't match search.
-				if ( false === strpos( $variant_name_lower, $search_lower ) &&
-					false === strpos( $product_name_lower, $search_lower ) ) {
-					continue;
-				}
-			}
-
+			
+			$variant_name = $this->format_variant_name( $variation );
+			
 			$variants[] = array(
-				'id'            => $child->get_id(),
+				'id'            => $variation->get_id(),
 				'name'          => $variant_name,
-				'regular_price' => $child->get_regular_price(),
-				'sale_price'    => $child->get_sale_price(),
+				'regular_price' => $variation->get_regular_price(),
+				'sale_price'    => $variation->get_sale_price(),
 			);
 		}
-
+		
 		return $variants;
 	}
 

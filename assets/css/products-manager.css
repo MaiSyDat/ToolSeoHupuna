@@ -1,0 +1,86 @@
+/* Product Manager Styles */
+
+.tsh-product-card {
+    background: #fff;
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.tsh-product-header {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e5e5e5;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.tsh-product-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.tsh-product-name textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    resize: vertical;
+}
+
+.tsh-product-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tsh-variant-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tsh-variant-table thead {
+    background: #fafafa;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.tsh-variant-table thead th {
+    padding: 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    color: #555;
+}
+
+.tsh-variant-table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+.tsh-variant-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tsh-variant-table tr:last-child td {
+    border-bottom: none;
+}
+
+#tsh-products-container {
+    margin-top: 20px;
+}
+
+.tsh-products-loading,
+.tsh-products-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: #666;
+    background: #f9f9f9;
+    border-radius: 6px;
+}

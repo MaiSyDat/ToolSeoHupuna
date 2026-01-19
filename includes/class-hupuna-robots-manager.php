@@ -31,12 +31,49 @@ class Hupuna_Robots_Manager {
 	}
 
 	/**
+	 * Enqueue admin scripts and styles.
+	 *
+	 * @param string $hook Current admin page hook.
+	 * @return void
+	 */
+	public function enqueue_scripts( $hook ) {
+		if ( 'tool-seo_page_tool-seo-hupuna-robots' !== $hook ) {
+			return;
+		}
+
+		// Enqueue JS
+		wp_enqueue_script(
+			'tool-seo-hupuna-robots',
+			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/js/robots-manager.js',
+			array( 'jquery' ),
+			TOOL_SEO_HUPUNA_VERSION,
+			true
+		);
+
+		// Localize script data
+		wp_localize_script(
+			'tool-seo-hupuna-robots',
+			'hupunaRobotsManager',
+			array(
+				'nonce'   => wp_create_nonce( 'tool_seo_hupuna_robots_nonce' ),
+				'strings' => array(
+					'saving'      => __( 'Saving...', 'tool-seo-hupuna' ),
+					'success'     => __( 'Robots.txt saved successfully!', 'tool-seo-hupuna' ),
+					'error'       => __( 'Error saving robots.txt', 'tool-seo-hupuna' ),
+					'serverError' => __( 'Server error. Please try again.', 'tool-seo-hupuna' ),
+				),
+			)
+		);
+	}
+
+	/**
 	 * Initialize hooks.
 	 *
 	 * @return void
 	 */
 	private function init_hooks() {
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_save_robots_txt', array( $this, 'ajax_save_robots_txt' ) );
 		add_filter( 'robots_txt', array( $this, 'filter_robots_txt' ), 10, 2 );
 	}
@@ -126,59 +163,6 @@ class Hupuna_Robots_Manager {
 				<pre id="tsh-robots-preview" style="background: #f5f5f5; padding: 15px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-family: monospace; font-size: 12px; white-space: pre-wrap; word-wrap: break-word;"><?php echo esc_html( $robots_content ); ?></pre>
 			</div>
 		</div>
-
-		<script>
-		(function($) {
-			'use strict';
-			
-			$(document).ready(function() {
-				var $saveBtn = $('#tsh-save-robots-btn');
-				var $message = $('#tsh-robots-message');
-				var $textarea = $('#robots-content');
-				var $preview = $('#tsh-robots-preview');
-				
-				// Update preview on textarea change.
-				$textarea.on('input', function() {
-					$preview.text($(this).val());
-				});
-				
-				// Save button click.
-				$saveBtn.on('click', function() {
-					var content = $textarea.val();
-					var originalText = $saveBtn.text();
-					
-					$saveBtn.prop('disabled', true).text('<?php echo esc_js( __( 'Saving...', 'tool-seo-hupuna' ) ); ?>');
-					$message.html('');
-					
-					$.ajax({
-						url: ajaxurl,
-						type: 'POST',
-						data: {
-							action: 'save_robots_txt',
-							nonce: '<?php echo esc_js( $nonce ); ?>',
-							robots_content: content
-						},
-						success: function(response) {
-							if (response.success) {
-								$message.html('<span style="color: #46b450;">✓ ' + (response.data.message || '<?php echo esc_js( __( 'Robots.txt saved successfully!', 'tool-seo-hupuna' ) ); ?>') + '</span>');
-								$preview.text(content);
-								setTimeout(function() {
-									$message.html('');
-								}, 3000);
-							} else {
-								$message.html('<span style="color: #dc3232;">✗ ' + (response.data.message || '<?php echo esc_js( __( 'Error saving robots.txt', 'tool-seo-hupuna' ) ); ?>') + '</span>');
-							}
-							$saveBtn.prop('disabled', false).text(originalText);
-						},
-						error: function() {
-							$message.html('<span style="color: #dc3232;">✗ <?php echo esc_js( __( 'Server error. Please try again.', 'tool-seo-hupuna' ) ); ?></span>');
-							$saveBtn.prop('disabled', false).text(originalText);
-						}
-					});
-				});
-			});
-		})(jQuery);
-		</script>
 		<?php
 	}
 

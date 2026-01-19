@@ -33,6 +33,60 @@ class Hupuna_Posts_Manager {
 	}
 
 	/**
+	 * Enqueue admin scripts and styles.
+	 *
+	 * @param string $hook Current admin page hook.
+	 * @return void
+	 */
+	public function enqueue_scripts( $hook ) {
+		if ( 'tool-seo_page_tool-seo-hupuna-posts-with-links' !== $hook ) {
+			return;
+		}
+
+		// Enqueue JS
+		wp_enqueue_script(
+			'tool-seo-hupuna-posts',
+			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/js/posts-manager.js',
+			array( 'jquery' ),
+			TOOL_SEO_HUPUNA_VERSION,
+			true
+		);
+
+		// Localize script data
+		wp_localize_script(
+			'tool-seo-hupuna-posts',
+			'hupunaPostsManager',
+			array(
+				'currentPage' => 1,
+				'lastSearch'  => '',
+				'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+				'nonce'       => wp_create_nonce( 'tool_seo_hupuna_posts_manager_nonce' ),
+				'strings'     => array(
+					'loading'       => __( 'Loading...', 'tool-seo-hupuna' ),
+					'noPosts'       => __( 'No posts found.', 'tool-seo-hupuna' ),
+					'saving'        => __( 'Saving...', 'tool-seo-hupuna' ),
+					'saved'         => __( 'Saved', 'tool-seo-hupuna' ),
+					'error'         => __( 'Error!', 'tool-seo-hupuna' ),
+					'confirmDelete' => __( 'Are you sure you want to delete this post?', 'tool-seo-hupuna' ),
+					'product'       => __( 'PRODUCT', 'tool-seo-hupuna' ),
+					'category'      => __( 'CATEGORY', 'tool-seo-hupuna' ),
+					'post'          => __( 'POST', 'tool-seo-hupuna' ),
+					'external'      => __( 'EXTERNAL', 'tool-seo-hupuna' ),
+					'viewLink'      => __( 'View Link', 'tool-seo-hupuna' ),
+					'saveLinks'     => __( 'Save Links', 'tool-seo-hupuna' ),
+					'viewPost'      => __( 'View Post', 'tool-seo-hupuna' ),
+					'edit'          => __( 'Edit', 'tool-seo-hupuna' ),
+					'delete'        => __( 'Delete', 'tool-seo-hupuna' ),
+					'prev'          => __( 'Previous', 'tool-seo-hupuna' ),
+					'next'          => __( 'Next', 'tool-seo-hupuna' ),
+					'page'          => __( 'Page', 'tool-seo-hupuna' ),
+					'of'            => __( 'of', 'tool-seo-hupuna' ),
+				),
+			)
+		);
+	}
+
+	/**
 	 * Get current site domain.
 	 * Uses cached value to avoid repeated calculations.
 	 *
@@ -116,6 +170,7 @@ class Hupuna_Posts_Manager {
 	 */
 	private function init_hooks() {
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_get_posts_with_links', array( $this, 'ajax_get_posts_with_links' ) );
 		add_action( 'wp_ajax_update_post_links', array( $this, 'ajax_update_post_links' ) );
 		add_action( 'wp_ajax_trash_post', array( $this, 'ajax_trash_post' ) );
@@ -176,253 +231,18 @@ class Hupuna_Posts_Manager {
 			</table>
 			<div id="tsh-posts-pagination" class="mt-3"></div>
 		</div>
-
-		<script>
-		var hupunaPostsManager = {
-			currentPage: 1,
-			lastSearch: '',
-			ajaxUrl: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
-			nonce: '<?php echo esc_js( wp_create_nonce( 'tool_seo_hupuna_posts_manager_nonce' ) ); ?>',
-			strings: {
-				loading: '<?php echo esc_js( __( 'Loading...', 'tool-seo-hupuna' ) ); ?>',
-				noPosts: '<?php echo esc_js( __( 'No posts found.', 'tool-seo-hupuna' ) ); ?>',
-				saving: '<?php echo esc_js( __( 'Saving...', 'tool-seo-hupuna' ) ); ?>',
-				saved: '<?php echo esc_js( __( 'Saved', 'tool-seo-hupuna' ) ); ?>',
-				error: '<?php echo esc_js( __( 'Error!', 'tool-seo-hupuna' ) ); ?>',
-				confirmDelete: '<?php echo esc_js( __( 'Are you sure you want to delete this post?', 'tool-seo-hupuna' ) ); ?>',
-				product: '<?php echo esc_js( __( 'PRODUCT', 'tool-seo-hupuna' ) ); ?>',
-				category: '<?php echo esc_js( __( 'CATEGORY', 'tool-seo-hupuna' ) ); ?>',
-				post: '<?php echo esc_js( __( 'POST', 'tool-seo-hupuna' ) ); ?>',
-				external: '<?php echo esc_js( __( 'EXTERNAL', 'tool-seo-hupuna' ) ); ?>',
-				viewLink: '<?php echo esc_js( __( 'View Link', 'tool-seo-hupuna' ) ); ?>',
-				saveLinks: '<?php echo esc_js( __( 'Save Links', 'tool-seo-hupuna' ) ); ?>',
-				viewPost: '<?php echo esc_js( __( 'View Post', 'tool-seo-hupuna' ) ); ?>',
-				edit: '<?php echo esc_js( __( 'Edit', 'tool-seo-hupuna' ) ); ?>',
-				delete: '<?php echo esc_js( __( 'Delete', 'tool-seo-hupuna' ) ); ?>',
-				prev: '<?php echo esc_js( __( 'Previous', 'tool-seo-hupuna' ) ); ?>',
-				next: '<?php echo esc_js( __( 'Next', 'tool-seo-hupuna' ) ); ?>',
-				page: '<?php echo esc_js( __( 'Page', 'tool-seo-hupuna' ) ); ?>',
-				of: '<?php echo esc_js( __( 'of', 'tool-seo-hupuna' ) ); ?>'
-			}
-		};
-
-		function loadPage(page, search) {
-			hupunaPostsManager.lastSearch = search;
-			var tbody = document.getElementById('tsh-posts-table-body');
-			tbody.innerHTML = '<tr><td colspan="5">' + hupunaPostsManager.strings.loading + '</td></tr>';
-
-			var formData = new FormData();
-			formData.append('action', 'get_posts_with_links');
-			formData.append('nonce', hupunaPostsManager.nonce);
-			formData.append('page', page);
-			formData.append('search', search);
-
-			fetch(hupunaPostsManager.ajaxUrl, {
-				method: 'POST',
-				body: formData
-			})
-			.then(res => res.json())
-			.then(data => {
-				tbody.innerHTML = '';
-				if (!data.success || data.data.posts.length === 0) {
-					tbody.innerHTML = '<tr><td colspan="5">' + hupunaPostsManager.strings.noPosts + '</td></tr>';
-					renderPagination(page, 0);
-					return;
-				}
-
-				data.data.posts.forEach(function(post) {
-					var tr = document.createElement('tr');
-					var linksHtml = post.links.map(function(link, index) {
-						var typeClass = link.type === 'product' ? 'product' : link.type === 'product_cat' ? 'category' : link.type === 'external' ? 'external' : 'post';
-						var typeLabel = link.type === 'product' ? hupunaPostsManager.strings.product : 
-										link.type === 'product_cat' ? hupunaPostsManager.strings.category : 
-										link.type === 'external' ? hupunaPostsManager.strings.external : 
-										hupunaPostsManager.strings.post;
-						var bgColor = link.type === 'product' ? '#e3f2fd' : link.type === 'product_cat' ? '#fff3e0' : link.type === 'external' ? '#ffebee' : '#f3e5f5';
-						var badgeColor = link.type === 'product' ? '#1976d2' : link.type === 'product_cat' ? '#f57c00' : link.type === 'external' ? '#d32f2f' : '#7b1fa2';
-
-						return '<div style="margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: ' + bgColor + ';">' +
-							'<div style="margin-bottom: 5px; font-size: 11px;">' +
-							'<span style="background: ' + badgeColor + '; color: #fff; padding: 2px 8px; border-radius: 3px; font-weight: 600; margin-right: 5px;">' + typeLabel + '</span>' +
-							'<span style="color: #666;">' + (link.text || '(No anchor text)') + '</span>' +
-							'</div>' +
-							'<input type="text" class="tsh-edit-link-url" data-post-id="' + post.id + '" data-link-index="' + index + '" data-old-url="' + escapeHtml(link.url) + '" value="' + escapeHtml(link.url) + '" style="width: 100%; padding: 5px; font-size: 12px; border: 1px solid #ccc;" placeholder="URL" />' +
-							'<div style="margin-top: 5px;"><a href="' + escapeHtml(link.url) + '" target="_blank" class="button button-small">' + hupunaPostsManager.strings.viewLink + '</a></div>' +
-							'</div>';
-					}).join('');
-
-					tr.innerHTML = '<td style="padding:6px;">' + post.id + '</td>' +
-						'<td style="padding:6px;"><strong>' + escapeHtml(post.title) + '</strong></td>' +
-						'<td style="padding:6px;"><div style="max-height: 300px; overflow-y: auto;">' + linksHtml + '</div></td>' +
-						'<td style="padding:6px;">' + post.date + '</td>' +
-						'<td style="padding:6px; white-space: nowrap;"><div style="display: flex; gap: 5px; flex-wrap: wrap;">' +
-						'<button class="tsh-save-links-btn button button-primary" data-id="' + post.id + '">' + hupunaPostsManager.strings.saveLinks + '</button>' +
-						'<a href="' + escapeHtml(post.permalink) + '" target="_blank" class="button button-small">' + hupunaPostsManager.strings.viewPost + '</a>' +
-						'<a href="' + escapeHtml(post.edit_link) + '" target="_blank" class="button button-small">' + hupunaPostsManager.strings.edit + '</a>' +
-						'<button class="tsh-trash-post-btn button tsh-button-link-delete" data-id="' + post.id + '">' + hupunaPostsManager.strings.delete + '</button>' +
-						'</div></td>';
-					tbody.appendChild(tr);
-				});
-
-				attachEventHandlers();
-				var totalPages = Math.ceil(data.data.total / data.data.per_page);
-				renderPagination(page, totalPages);
-				hupunaPostsManager.currentPage = page;
-			})
-			.catch(err => {
-				tbody.innerHTML = '<tr><td colspan="5">Error: ' + err.message + '</td></tr>';
-			});
-		}
-
-		function attachEventHandlers() {
-			document.querySelectorAll('.tsh-save-links-btn').forEach(function(btn) {
-				btn.addEventListener('click', function() {
-					var postId = this.dataset.id;
-					var linkInputs = document.querySelectorAll('.tsh-edit-link-url[data-post-id="' + postId + '"]');
-					var links = [];
-					linkInputs.forEach(function(input) {
-						links.push({
-							old_url: input.dataset.oldUrl,
-							new_url: input.value.trim()
-						});
-					});
-
-					var originalText = this.textContent;
-					this.disabled = true;
-					this.textContent = hupunaPostsManager.strings.saving;
-
-					var formData = new FormData();
-					formData.append('action', 'update_post_links');
-					formData.append('nonce', hupunaPostsManager.nonce);
-					formData.append('id', postId);
-					formData.append('links', JSON.stringify(links));
-
-					fetch(hupunaPostsManager.ajaxUrl, {
-						method: 'POST',
-						body: formData
-					})
-					.then(r => r.json())
-					.then(data => {
-						this.textContent = data.success ? '✓ ' + hupunaPostsManager.strings.saved : hupunaPostsManager.strings.error;
-						if (data.success) {
-							linkInputs.forEach(function(input) {
-								input.dataset.oldUrl = input.value.trim();
-							});
-							setTimeout(function() {
-								loadPage(hupunaPostsManager.currentPage, hupunaPostsManager.lastSearch);
-							}, 1000);
-						}
-						setTimeout(function() {
-							this.textContent = originalText;
-							this.disabled = false;
-						}.bind(this), 2000);
-					})
-					.catch(() => {
-						this.textContent = hupunaPostsManager.strings.error;
-						setTimeout(function() {
-							this.textContent = originalText;
-							this.disabled = false;
-						}.bind(this), 2000);
-					});
-				});
-			});
-
-			document.querySelectorAll('.tsh-trash-post-btn').forEach(function(btn) {
-				btn.addEventListener('click', function() {
-					if (!confirm(hupunaPostsManager.strings.confirmDelete)) return;
-					var id = this.dataset.id;
-
-					var formData = new FormData();
-					formData.append('action', 'trash_post');
-					formData.append('nonce', hupunaPostsManager.nonce);
-					formData.append('id', id);
-
-					fetch(hupunaPostsManager.ajaxUrl, {
-						method: 'POST',
-						body: formData
-					})
-					.then(r => r.json())
-					.then(data => {
-						if (data.success) {
-							alert(data.data.message || 'Post deleted');
-							loadPage(hupunaPostsManager.currentPage, hupunaPostsManager.lastSearch);
-						} else {
-							alert(data.data.message || 'Error deleting post');
-						}
-					})
-					.catch(err => {
-						alert('Error: ' + err.message);
-					});
-				});
-			});
-		}
-
-		function renderPagination(page, totalPages) {
-			var pagination = document.getElementById('tsh-posts-pagination');
-			pagination.innerHTML = '';
-			if (totalPages <= 1) return;
-
-			function createButton(label, pageNum, disabled) {
-				var btn = document.createElement('button');
-				btn.textContent = label;
-				btn.className = 'button';
-				btn.style.margin = '0 2px';
-				if (label === page.toString()) {
-					btn.className += ' button-primary';
-					btn.disabled = true;
-				}
-				btn.disabled = disabled || false;
-				btn.onclick = function() { loadPage(pageNum, hupunaPostsManager.lastSearch); };
-				return btn;
-			}
-
-			if (page > 1) pagination.appendChild(createButton(hupunaPostsManager.strings.prev, page - 1));
-			for (var i = 1; i <= totalPages; i++) {
-				if (i === 1 || i === totalPages || Math.abs(i - page) <= 1) {
-					pagination.appendChild(createButton(i, i, i === page));
-				} else if ((i === 2 && page > 3) || (i === totalPages - 1 && page < totalPages - 2)) {
-					var dots = document.createElement('span');
-					dots.textContent = '...';
-					dots.style.margin = '0 5px';
-					pagination.appendChild(dots);
-				}
-			}
-			if (page < totalPages) pagination.appendChild(createButton(hupunaPostsManager.strings.next, page + 1));
-		}
-
-		function escapeHtml(text) {
-			var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-			return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
-		}
-
-		document.getElementById('tsh-posts-search-btn').addEventListener('click', function() {
-			loadPage(1, document.getElementById('tsh-posts-search-input').value);
-		});
-
-		document.getElementById('tsh-posts-clear-search-btn').addEventListener('click', function() {
-			document.getElementById('tsh-posts-search-input').value = '';
-			loadPage(1, '');
-		});
-
-		document.getElementById('tsh-posts-search-input').addEventListener('keydown', function(e) {
-			if (e.key === 'Enter') {
-				e.preventDefault();
-				loadPage(1, this.value);
-			}
-		});
-
-		loadPage(1, '');
-		</script>
 		<?php
 	}
 
 	/**
 	 * AJAX handler: Get posts with links.
-	 * Optimized with database-level pagination to prevent memory exhaustion.
+	 * Optimized with direct SQL queries for maximum performance.
 	 *
 	 * @return void
 	 */
 	public function ajax_get_posts_with_links() {
+		global $wpdb;
+		
 		check_ajax_referer( 'tool_seo_hupuna_posts_manager_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -432,6 +252,7 @@ class Hupuna_Posts_Manager {
 		$page     = max( 1, intval( isset( $_POST['page'] ) ? $_POST['page'] : 1 ) );
 		$search   = trim( sanitize_text_field( isset( $_POST['search'] ) ? $_POST['search'] : '' ) );
 		$per_page = 20;
+		$offset   = ( $page - 1 ) * $per_page;
 
 		// Get all public post types (cached).
 		$post_types = get_transient( 'tool_seo_hupuna_public_post_types' );
@@ -442,62 +263,72 @@ class Hupuna_Posts_Manager {
 			set_transient( 'tool_seo_hupuna_public_post_types', $post_types, TOOL_SEO_HUPUNA_CACHE_EXPIRATION );
 		}
 
-		// Build WP_Query args with database-level pagination.
-		$args = array(
-			'post_type'      => $post_types,
-			'post_status'    => 'publish',
-			'posts_per_page' => $per_page * 3, // Fetch 3x to account for posts without links.
-			'paged'          => $page,
-			'orderby'        => 'date',
-			'order'          => 'DESC',
-			'no_found_rows'  => false, // We need total count.
-		);
+		// Prepare post types for SQL IN clause.
+		$post_types_placeholders = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
 
-		// Use WP_Query search parameter for database-level filtering.
+		// Build base SQL query - filter posts containing HTML anchor tags.
+		$where_clauses = array();
+		$where_clauses[] = "post_type IN ($post_types_placeholders)";
+		$where_clauses[] = "post_status = 'publish'";
+		$where_clauses[] = "post_content LIKE %s"; // Filter posts with <a tags.
+
+		$sql_params = array_values( $post_types );
+		$sql_params[] = '%<a %'; // Posts must contain anchor tags.
+
+		// Add search filter if provided.
 		if ( ! empty( $search ) ) {
-			$args['s'] = $search;
+			$search_like = '%' . $wpdb->esc_like( $search ) . '%';
+			$where_clauses[] = "(post_title LIKE %s OR post_content LIKE %s)";
+			$sql_params[] = $search_like;
+			$sql_params[] = $search_like;
 		}
 
-		$query = new WP_Query( $args );
+		$where_sql = implode( ' AND ', $where_clauses );
+
+		// Query with SQL_CALC_FOUND_ROWS for accurate pagination.
+		$query = $wpdb->prepare(
+			"SELECT SQL_CALC_FOUND_ROWS ID, post_title, post_content, post_date 
+			FROM {$wpdb->posts} 
+			WHERE $where_sql 
+			ORDER BY post_date DESC 
+			LIMIT %d OFFSET %d",
+			array_merge( $sql_params, array( $per_page, $offset ) )
+		);
+
+		// Execute query.
+		$posts = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		// Get total count for pagination.
+		$total = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
+
 		$posts_with_links = array();
-		$max_iterations = 5; // Safety limit to prevent infinite loops.
-		$iteration = 0;
-		$current_batch_page = $page;
 
-		// Fetch posts in batches until we have enough results with links.
-		while ( count( $posts_with_links ) < $per_page && $iteration < $max_iterations ) {
-			if ( ! $query->have_posts() ) {
-				break; // No more posts available.
-			}
+		if ( ! empty( $posts ) ) {
+			foreach ( $posts as $post ) {
+				// Extract links from post content.
+				$links = $this->extract_internal_links_from_content( $post->post_content, $post->ID );
 
-			// Process only the current batch (already paginated by WP_Query).
-			while ( $query->have_posts() && count( $posts_with_links ) < $per_page ) {
-				$query->the_post();
-				$post_id = get_the_ID();
-				$content = get_the_content();
-				$title   = get_the_title();
-
-				// Extract links from this post's content (heavy regex only on paginated results).
-				$links = $this->extract_internal_links_from_content( $content, $post_id );
-
-				// Only include posts that have internal links.
+				// Only include posts that actually have links after extraction.
 				if ( ! empty( $links ) ) {
-					// Apply search filter if provided (already filtered by WP_Query 's', but double-check URL matches).
+					// If search is provided, Filter by URL/anchor text match.
 					$should_include = true;
 					if ( ! empty( $search ) ) {
 						$should_include = false;
 						$search_lower = strtolower( $search );
 
-						// Check title match.
-						if ( false !== strpos( strtolower( $title ), $search_lower ) ) {
+						// Check if title matches (already filtered by SQL, but double-check).
+						if ( false !== strpos( strtolower( $post->post_title ), $search_lower ) ) {
 							$should_include = true;
 						}
 
-						// Check URL match in links.
+						// Check if any link URL or anchor text matches.
 						if ( ! $should_include ) {
 							foreach ( $links as $link ) {
 								$link_url = strtolower( trim( $link['url'] ) );
-								if ( false !== strpos( $link_url, $search_lower ) || false !== strpos( $search_lower, $link_url ) ) {
+								$link_text = strtolower( trim( $link['text'] ) );
+								
+								if ( false !== strpos( $link_url, $search_lower ) || 
+									 false !== strpos( $link_text, $search_lower ) ) {
 									$should_include = true;
 									break;
 								}
@@ -507,41 +338,21 @@ class Hupuna_Posts_Manager {
 
 					if ( $should_include ) {
 						$posts_with_links[] = array(
-							'id'        => $post_id,
-							'title'     => $title,
-							'permalink' => get_permalink( $post_id ),
-							'edit_link' => get_edit_post_link( $post_id, '' ),
-							'date'      => get_the_date( 'd/m/Y' ),
+							'id'        => (int) $post->ID,
+							'title'     => $post->post_title,
+							'permalink' => get_permalink( $post->ID ),
+							'edit_link' => get_edit_post_link( $post->ID, '' ),
+							'date'      => mysql2date( 'd/m/Y', $post->post_date ),
 							'links'     => $links,
 						);
 					}
 				}
 			}
-
-			// If we don't have enough results, fetch next batch.
-			if ( count( $posts_with_links ) < $per_page ) {
-				$current_batch_page++;
-				$args['paged'] = $current_batch_page;
-				$query = new WP_Query( $args );
-				$iteration++;
-			} else {
-				break; // We have enough results.
-			}
 		}
-
-		wp_reset_postdata();
-
-		// Calculate total count (approximate for performance).
-		// Note: Exact count would require scanning all posts, which defeats the purpose.
-		// We use found_posts as an approximation.
-		$total = $query->found_posts;
-
-		// Return only the requested page size.
-		$paged_posts = array_slice( $posts_with_links, 0, $per_page );
 
 		wp_send_json_success(
 			array(
-				'posts'    => $paged_posts,
+				'posts'    => $posts_with_links,
 				'total'    => $total,
 				'per_page' => $per_page,
 				'page'     => $page,

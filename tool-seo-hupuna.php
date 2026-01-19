@@ -3,7 +3,7 @@
  * Plugin Name: Tool SEO Hupuna
  * Plugin URI: https://hupuna.com
  * Description: Comprehensive SEO tools including external link scanner, posts with links manager, and WooCommerce product price manager.
- * Version: 2.1.1
+ * Version: 2.2.0
  * Author: MaiSyDat
  * Author URI: https://hupuna.com
  * License: GPL v2 or later
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Current plugin version.
  */
-define( 'TOOL_SEO_HUPUNA_VERSION', '2.1.1' );
+define( 'TOOL_SEO_HUPUNA_VERSION', '2.2.0' );
 
 /**
  * Plugin directory path.
