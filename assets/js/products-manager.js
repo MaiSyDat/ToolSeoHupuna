@@ -115,9 +115,9 @@
         document.querySelectorAll('.tsh-save-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var productId = this.dataset.id;
-                var row = this.closest('tr');
-                var regularInput = row.querySelector('input[data-type="regular"]');
-                var saleInput = row.querySelector('input[data-type="sale"]');
+                var card = this.closest('.tsh-product-card');
+                var regularInput = card.querySelector('input[data-type="regular"]');
+                var saleInput = card.querySelector('input[data-type="sale"]');
 
                 if (!regularInput) return;
 
@@ -312,13 +312,22 @@
      * Initialize on document ready
      */
     document.addEventListener('DOMContentLoaded', function () {
+        var searchBtn = document.getElementById('tsh-products-search-btn');
+        var searchInput = document.getElementById('tsh-products-search-input');
+        var container = document.getElementById('tsh-products-container');
+
+        // Only initialize if products manager elements exist
+        if (!searchBtn || !searchInput || !container) {
+            return;
+        }
+
         // Search button
-        document.getElementById('tsh-products-search-btn').addEventListener('click', function () {
-            loadPage(1, document.getElementById('tsh-products-search-input').value);
+        searchBtn.addEventListener('click', function () {
+            loadPage(1, searchInput.value);
         });
 
         // Search on Enter key
-        document.getElementById('tsh-products-search-input').addEventListener('keydown', function (e) {
+        searchInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 loadPage(1, this.value);

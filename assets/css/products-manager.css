@@ -2,7 +2,7 @@
 
 .tsh-product-card {
     background: #fff;
-    border: 1px solid var(--primary-color);
+    border: 1px solid #096484;
     border-radius: 6px;
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);

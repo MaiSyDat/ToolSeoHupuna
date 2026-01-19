@@ -214,19 +214,30 @@
      * Initialize on document ready
      */
     document.addEventListener('DOMContentLoaded', function () {
+        // Check if we're on the posts manager page
+        var searchBtn = document.getElementById('tsh-posts-search-btn');
+        var clearBtn = document.getElementById('tsh-posts-clear-search-btn');
+        var searchInput = document.getElementById('tsh-posts-search-input');
+        var tableBody = document.getElementById('tsh-posts-table-body');
+
+        // Only initialize if posts manager elements exist
+        if (!searchBtn || !clearBtn || !searchInput || !tableBody) {
+            return; // Not on posts manager page, exit gracefully
+        }
+
         // Search button
-        document.getElementById('tsh-posts-search-btn').addEventListener('click', function () {
-            loadPage(1, document.getElementById('tsh-posts-search-input').value);
+        searchBtn.addEventListener('click', function () {
+            loadPage(1, searchInput.value);
         });
 
         // Clear search button
-        document.getElementById('tsh-posts-clear-search-btn').addEventListener('click', function () {
-            document.getElementById('tsh-posts-search-input').value = '';
+        clearBtn.addEventListener('click', function () {
+            searchInput.value = '';
             loadPage(1, '');
         });
 
         // Search on Enter key
-        document.getElementById('tsh-posts-search-input').addEventListener('keydown', function (e) {
+        searchInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 loadPage(1, this.value);

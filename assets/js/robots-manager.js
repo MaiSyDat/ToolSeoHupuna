@@ -12,6 +12,11 @@
         var $textarea = $('#robots-content');
         var $preview = $('#tsh-robots-preview');
 
+        // Only proceed if all elements exist
+        if (!$saveBtn.length || !$textarea.length || !$preview.length) {
+            return;
+        }
+
         // Get localized data
         var robotsData = window.hupunaRobotsManager || {};
 
@@ -29,7 +34,7 @@
             $message.html('');
 
             $.ajax({
-                url: ajaxurl,
+                url: robotsData.ajaxUrl || ajaxurl,
                 type: 'POST',
                 data: {
                     action: 'save_robots_txt',

@@ -37,7 +37,8 @@ class Hupuna_Robots_Manager {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
-		if ( 'tool-seo_page_tool-seo-hupuna-robots' !== $hook ) {
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		if ( 'tool-seo-hupuna-robots' !== $page ) {
 			return;
 		}
 
@@ -55,6 +56,7 @@ class Hupuna_Robots_Manager {
 			'tool-seo-hupuna-robots',
 			'hupunaRobotsManager',
 			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( 'tool_seo_hupuna_robots_nonce' ),
 				'strings' => array(
 					'saving'      => __( 'Saving...', 'tool-seo-hupuna' ),
