@@ -65,19 +65,12 @@ class Hupuna_Products_Manager {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
-		// DEBUG: Temporarily force load
-		// if ( 'tool-seo_page_tool-seo-hupuna-product-prices' !== $hook ) {
-		// 	return;
-		// }
-
-		// Enqueue CSS
 		wp_enqueue_style(
-			'tool-seo-hupuna-products',
-			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/css/products-manager.css',
+			'tool-seo-hupuna-admin',
+			TOOL_SEO_HUPUNA_PLUGIN_URL . 'assets/css/admin.css',
 			array(),
 			TOOL_SEO_HUPUNA_VERSION
 		);
-
 		// Enqueue JS
 		wp_enqueue_script(
 			'tool-seo-hupuna-products',

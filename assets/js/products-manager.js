@@ -59,9 +59,9 @@
                             '</div></div>';
 
                         var tableHTML = '<table class="tsh-variant-table"><thead><tr>' +
-                            '<th>Variant</th>' +
-                            '<th style="width: 150px;">Regular Price</th>' +
-                            '<th style="width: 150px;">Sale Price</th>' +
+                            '<th>' + manager.strings.variant + '</th>' +
+                            '<th style="width: 150px;">' + manager.strings.regularPrice + '</th>' +
+                            '<th style="width: 150px;">' + manager.strings.salePrice + '</th>' +
                             '</tr></thead><tbody>';
 
                         p.variants.forEach(function (v) {
@@ -85,9 +85,9 @@
                             '</div></div>';
 
                         var tableHTML = '<table class="tsh-variant-table"><tbody><tr>' +
-                            '<td><strong>Regular Price</strong></td>' +
+                            '<td><strong>' + manager.strings.regularPrice + '</strong></td>' +
                             '<td><input type="number" value="' + (p.regular_price || '') + '" data-id="' + p.id + '" data-type="regular" style="width:100%;"/></td>' +
-                            '<td><strong>Sale Price</strong></td>' +
+                            '<td><strong>' + manager.strings.salePrice + '</strong></td>' +
                             '<td><input type="number" value="' + (p.sale_price || '') + '" data-id="' + p.id + '" data-type="sale" style="width:100%;"/></td>' +
                             '</tr></tbody></table>';
 

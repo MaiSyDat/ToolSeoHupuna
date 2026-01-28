@@ -1,6 +1,6 @@
 /**
  * Posts Manager JavaScript
- * Handles post listing with internal links editing and AJAX operations
+ * Handles post listing with internal links viewing
  */
 
 (function ($) {
@@ -23,6 +23,8 @@
     function loadPage(page, search) {
         manager.lastSearch = search;
         var tbody = document.getElementById('tsh-posts-table-body');
+        if (!tbody) return;
+
         tbody.innerHTML = '<tr><td colspan="5">' + manager.strings.loading + '</td></tr>';
 
         var formData = new FormData();
@@ -44,10 +46,9 @@
                     return;
                 }
 
-                data.data.posts.forEach(function (post) {
+                data.data.posts.forEach(function (item) {
                     var tr = document.createElement('tr');
-                    var linksHtml = post.links.map(function (link, index) {
-                        var typeClass = link.type === 'product' ? 'product' : link.type === 'product_cat' ? 'category' : link.type === 'external' ? 'external' : 'post';
+                    var linksHtml = item.links.map(function (link) {
                         var typeLabel = link.type === 'product' ? manager.strings.product :
                             link.type === 'product_cat' ? manager.strings.category :
                                 link.type === 'external' ? manager.strings.external :
@@ -55,123 +56,40 @@
                         var bgColor = link.type === 'product' ? '#e3f2fd' : link.type === 'product_cat' ? '#fff3e0' : link.type === 'external' ? '#ffebee' : '#f3e5f5';
                         var badgeColor = link.type === 'product' ? '#1976d2' : link.type === 'product_cat' ? '#f57c00' : link.type === 'external' ? '#d32f2f' : '#7b1fa2';
 
-                        return '<div style="margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: ' + bgColor + ';">' +
+                        // Badge for location (Excerpt vs Content)
+                        var locBadge = link.in_excerpt ? '<span style="background: #607d8b; color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 10px; margin-left: 5px;">' + (manager.strings.excerpt || 'Excerpt') + '</span>' : '';
+
+                        return '<div style="margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: ' + bgColor + ';">' +
                             '<div style="margin-bottom: 5px; font-size: 11px;">' +
                             '<span style="background: ' + badgeColor + '; color: #fff; padding: 2px 8px; border-radius: 3px; font-weight: 600; margin-right: 5px;">' + typeLabel + '</span>' +
-                            '<span style="color: #666;">' + (link.text || '(No anchor text)') + '</span>' +
+                            '<span style="color: #666;">' + (link.text || manager.strings.noAnchor) + '</span>' +
+                            locBadge +
                             '</div>' +
-                            '<input type="text" class="tsh-edit-link-url" data-post-id="' + post.id + '" data-link-index="' + index + '" data-old-url="' + escapeHtml(link.url) + '" value="' + escapeHtml(link.url) + '" style="width: 100%; padding: 5px; font-size: 12px; border: 1px solid #ccc;" placeholder="URL" />' +
-                            '<div style="margin-top: 5px;"><a href="' + escapeHtml(link.url) + '" target="_blank" class="button button-small">' + manager.strings.viewLink + '</a></div>' +
+                            '<div style="word-break: break-all; font-size: 12px; color: #1976d2;"><a href="' + escapeHtml(link.url) + '" target="_blank">' + escapeHtml(link.url) + '</a></div>' +
                             '</div>';
                     }).join('');
 
-                    tr.innerHTML = '<td style="padding:6px;">' + post.id + '</td>' +
-                        '<td style="padding:6px;"><strong>' + escapeHtml(post.title) + '</strong></td>' +
-                        '<td style="padding:6px;"><div style="max-height: 300px; overflow-y: auto;">' + linksHtml + '</div></td>' +
-                        '<td style="padding:6px;">' + post.date + '</td>' +
-                        '<td style="padding:6px; white-space: nowrap;"><div style="display: flex; gap: 5px; flex-wrap: wrap;">' +
-                        '<button class="tsh-save-links-btn button button-primary" data-id="' + post.id + '">' + manager.strings.saveLinks + '</button>' +
-                        '<a href="' + escapeHtml(post.permalink) + '" target="_blank" class="button button-small">' + manager.strings.viewPost + '</a>' +
-                        '<a href="' + escapeHtml(post.edit_link) + '" target="_blank" class="button button-small">' + manager.strings.edit + '</a>' +
-                        '<button class="tsh-trash-post-btn button tsh-button-link-delete" data-id="' + post.id + '">' + manager.strings.delete + '</button>' +
+                    // Display source badge in Title column
+                    var sourceLabel = item.source === 'term' ? '<span style="color:#666; font-size:10px; display:block;">[' + (item.sub_type === 'product_cat' ? manager.strings.productCategory || 'Product Category' : manager.strings.newsCategory || 'Category') + ']</span>' :
+                        (item.sub_type === 'product' ? '<span style="color:#666; font-size:10px; display:block;">[' + manager.strings.product_singular || 'Product' + ']</span>' : '');
+
+                    tr.innerHTML = '<td style="padding:10px;">' + item.id + '</td>' +
+                        '<td style="padding:10px;"><strong>' + escapeHtml(item.title) + '</strong>' + sourceLabel + '</td>' +
+                        '<td style="padding:10px;"><div style="max-height: 300px; overflow-y: auto;">' + linksHtml + '</div></td>' +
+                        '<td style="padding:10px;">' + item.date + '</td>' +
+                        '<td style="padding:10px; white-space: nowrap;"><div style="display: flex; gap: 5px;">' +
+                        '<a href="' + escapeHtml(item.permalink) + '" target="_blank" class="button button-primary">' + manager.strings.view + '</a>' +
                         '</div></td>';
                     tbody.appendChild(tr);
                 });
 
-                attachEventHandlers();
                 var totalPages = Math.ceil(data.data.total / data.data.per_page);
                 renderPagination(page, totalPages);
                 manager.currentPage = page;
             })
             .catch(err => {
-                tbody.innerHTML = '<tr><td colspan="5">Error: ' + err.message + '</td></tr>';
+                if (tbody) tbody.innerHTML = '<tr><td colspan="5">Error: ' + err.message + '</td></tr>';
             });
-    }
-
-    /**
-     * Attach event handlers to dynamic elements
-     */
-    function attachEventHandlers() {
-        document.querySelectorAll('.tsh-save-links-btn').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                var postId = this.dataset.id;
-                var linkInputs = document.querySelectorAll('.tsh-edit-link-url[data-post-id="' + postId + '"]');
-                var links = [];
-                linkInputs.forEach(function (input) {
-                    links.push({
-                        old_url: input.dataset.oldUrl,
-                        new_url: input.value.trim()
-                    });
-                });
-
-                var originalText = this.textContent;
-                this.disabled = true;
-                this.textContent = manager.strings.saving;
-
-                var formData = new FormData();
-                formData.append('action', 'update_post_links');
-                formData.append('nonce', manager.nonce);
-                formData.append('id', postId);
-                formData.append('links', JSON.stringify(links));
-
-                fetch(manager.ajaxUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(r => r.json())
-                    .then(data => {
-                        this.textContent = data.success ? '✓ ' + manager.strings.saved : manager.strings.error;
-                        if (data.success) {
-                            linkInputs.forEach(function (input) {
-                                input.dataset.oldUrl = input.value.trim();
-                            });
-                            setTimeout(function () {
-                                loadPage(manager.currentPage, manager.lastSearch);
-                            }, 1000);
-                        }
-                        setTimeout(function () {
-                            this.textContent = originalText;
-                            this.disabled = false;
-                        }.bind(this), 2000);
-                    })
-                    .catch(() => {
-                        this.textContent = manager.strings.error;
-                        setTimeout(function () {
-                            this.textContent = originalText;
-                            this.disabled = false;
-                        }.bind(this), 2000);
-                    });
-            });
-        });
-
-        document.querySelectorAll('.tsh-trash-post-btn').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                if (!confirm(manager.strings.confirmDelete)) return;
-                var id = this.dataset.id;
-
-                var formData = new FormData();
-                formData.append('action', 'trash_post');
-                formData.append('nonce', manager.nonce);
-                formData.append('id', id);
-
-                fetch(manager.ajaxUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.data.message || 'Post deleted');
-                            loadPage(manager.currentPage, manager.lastSearch);
-                        } else {
-                            alert(data.data.message || 'Error deleting post');
-                        }
-                    })
-                    .catch(err => {
-                        alert('Error: ' + err.message);
-                    });
-            });
-        });
     }
 
     /**
@@ -179,6 +97,7 @@
      */
     function renderPagination(page, totalPages) {
         var pagination = document.getElementById('tsh-posts-pagination');
+        if (!pagination) return;
         pagination.innerHTML = '';
         if (totalPages <= 1) return;
 
@@ -214,29 +133,22 @@
      * Initialize on document ready
      */
     document.addEventListener('DOMContentLoaded', function () {
-        // Check if we're on the posts manager page
         var searchBtn = document.getElementById('tsh-posts-search-btn');
         var clearBtn = document.getElementById('tsh-posts-clear-search-btn');
         var searchInput = document.getElementById('tsh-posts-search-input');
         var tableBody = document.getElementById('tsh-posts-table-body');
 
-        // Only initialize if posts manager elements exist
-        if (!searchBtn || !clearBtn || !searchInput || !tableBody) {
-            return; // Not on posts manager page, exit gracefully
-        }
+        if (!searchBtn || !clearBtn || !searchInput || !tableBody) return;
 
-        // Search button
         searchBtn.addEventListener('click', function () {
             loadPage(1, searchInput.value);
         });
 
-        // Clear search button
         clearBtn.addEventListener('click', function () {
             searchInput.value = '';
             loadPage(1, '');
         });
 
-        // Search on Enter key
         searchInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -244,7 +156,6 @@
             }
         });
 
-        // Load first page
         loadPage(1, '');
     });
 

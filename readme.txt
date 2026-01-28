@@ -3,22 +3,19 @@ Contributors: maisydat
 Tags: seo, links, scanner, external links, product manager, price manager, woocommerce, audit, content management
 Requires at least: 5.8
 Tested up to: 6.4
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Comprehensive SEO tools including external link scanner, posts with links manager, and WooCommerce product price manager.
+Comprehensive SEO tools including external link scanner, links in posts manager, and WooCommerce product price manager.
 
 == Description ==
 
-Tool SEO Hupuna is a powerful WordPress plugin that provides comprehensive SEO and content management tools. It includes three main features: external link scanner, posts with links manager, and WooCommerce product price manager.
-
-= Key Features =
-
-* **External Link Scanner**: Scans your entire WordPress website for external links across posts, pages, comments, and options
-* **Posts with Links Manager**: Manage and edit internal links (products, categories, posts) in your content
-* **WooCommerce Product Price Manager**: Bulk edit product prices and names directly from admin panel
+* **External Link Scanner**: Scans your entire WordPress website for external links across posts, pages, comments, and options.
+* **Links in Posts**: Manage and edit links (internal and external) in your content.
+* **WooCommerce Product Manager**: Bulk edit product names and prices directly from the admin panel.
+* **Keyword Search**: High-performance search across products, posts, and categories.
 * **Batch Processing**: Optimized for large databases with efficient batch processing
 * **Smart Filtering**: Automatically excludes system domains (WordPress.org, WooCommerce, Gravatar, etc.)
 * **WordPress Default UI**: Clean, native WordPress admin interface
@@ -34,7 +31,7 @@ Scans your entire website for external links:
 
 Results can be viewed grouped by URL or as all occurrences, with quick edit/view links.
 
-= Posts with Links Manager =
+= Links in Posts =
 
 Manage internal links in your content:
 * Find posts containing specific URLs
@@ -42,14 +39,14 @@ Manage internal links in your content:
 * Supports products, product categories, and posts
 * Works with all post types
 
-= WooCommerce Product Price Manager =
+= Keyword Search =
 
-Bulk manage WooCommerce products:
-* Edit product names inline
-* Update regular and sale prices
-* Support for simple and variable products
-* Save all variants at once
-* Search products by name, SKU, and variation attributes
+Search through your site's content with high performance:
+* Search in WooCommerce Products (Descriptions).
+* Search in News/Posts (Titles and Content).
+* Search in Product Categories and News Categories (Descriptions).
+* Direct SQL optimization for maximum speed.
+* In-context keyword highlighting.
 
 == Installation ==
 
@@ -91,22 +88,25 @@ Yes. The Product Price Manager allows you to edit multiple product prices at onc
 == Screenshots ==
 
 1. External Link Scanner interface
-2. Posts with Links Manager
+2. Links in Posts
 3. Product Price Manager
 
 == Changelog ==
 
+= 2.3.0 =
+* **Feature Expansion**: Links in Posts now supports WooCommerce product descriptions, excerpts, and category descriptions.
+* **Simplified UI**: Links in Posts transformed into a high-performance read-only module with direct "View" actions for improved workflow.
+* **Robust Link Detection**: Added support for unlinked (plain text) URLs and improved anchor tag matching regardless of HTML formatting.
+* **Smart Classification**: Fixed Link classification for subdirectory installations; accurately distinguishes Products vs Posts.
+* **Localization Updates**: Improved Vietnamese translation across all modules.
+
 = 2.2.0 =
-* **MAJOR PERFORMANCE UPGRADE**: Refactored search functionality with direct SQL queries
-* Post Link Manager: Replaced WP_Query with $wpdb for 20-50x faster search
-* Post Link Manager: Added SQL_CALC_FOUND_ROWS for accurate pagination
-* Post Link Manager: Search now works across title, content, anchor text, and URLs
-* Product Manager: Replaced WooCommerce API with optimized SQL queries
-* Product Manager: Search across product title, content, SKU, and variation attributes
-* Product Manager: Fixed duplicate product display bug
-* Product Manager: Added WooCommerce safety checks to prevent fatal errors
-* LLMs.txt Manager: Added physical file detection with admin notice
-* LLMs.txt Manager: Enhanced security with wp_strip_all_tags and strict headers
+* **MAJOR UPGRADE**: Internationalization and Feature Refinement.
+* Added Keyword Search feature with optimized SQL logic.
+* Full Internationalization: Set English as default language with Vietnamese translations.
+* Removed Robots.txt and LLMs.txt Manager modules as they are redundant.
+* Major performance upgrade for Links in Posts and Product Manager.
+* Codebase optimization: Cleaned up classes, assets, and styling.
 * Scanner: Added 50,000 character limit to prevent regex timeouts
 * Scanner: Added filterable content limit via tool_seo_hupuna_scan_content_limit
 * Code cleanup: Removed unused methods and optimized queries
@@ -114,7 +114,7 @@ Yes. The Product Price Manager allows you to edit multiple product prices at onc
 
 = 2.1.1 =
 * Renamed plugin to Tool SEO Hupuna
-* Added Posts with Links Manager feature
+* Added Links in Posts feature
 * Added WooCommerce Product Price Manager feature
 * Improved UI with WordPress default styles
 * Removed emoji icons
@@ -128,11 +128,14 @@ Yes. The Product Price Manager allows you to edit multiple product prices at onc
 
 == Upgrade Notice ==
 
+= 2.3.0 =
+Expanded link scanning to products and categories. Improved link detection for plain text URLs. UI simplified for read-only efficiency.
+
 = 2.2.0 =
 Major performance upgrade! Direct SQL queries provide 20-50x faster search. Enhanced security and bug fixes. Highly recommended update.
 
 = 2.1.1 =
-Major update: Added Posts with Links Manager and Product Price Manager features. Improved UI and renamed to Tool SEO Hupuna.
+Major update: Added Links in Posts and Product Price Manager features. Improved UI and renamed to Tool SEO Hupuna.
 
 = 2.0.0 =
 Initial release of Tool SEO Hupuna.

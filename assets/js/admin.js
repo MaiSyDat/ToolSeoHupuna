@@ -1,7 +1,7 @@
-(function($) {
+(function ($) {
     'use strict';
-    
-    $(document).ready(function() {
+
+    $(document).ready(function () {
         // Elements
         var $scanButton = $('#tool-seo-hupuna-scan-button');
         var $progressWrap = $('#tool-seo-hupuna-progress-wrap');
@@ -9,7 +9,7 @@
         var $progressText = $('#tool-seo-hupuna-progress-text');
         var $results = $('#tool-seo-hupuna-scan-results');
         var $resultsContent = $('#tool-seo-hupuna-results-content');
-        
+
         // State
         var allResults = [];
         var isScanning = false;
@@ -17,14 +17,14 @@
         var totalStepsInitial = 0;
         var maxRetries = 3;
         var retryCount = 0;
-        
+
         // Pagination & Tabs
         var currentTab = 'grouped';
         var currentPage = 1;
         var itemsPerPage = 20;
-        
+
         // --- Core Scanning Logic ---
-        
+
         /**
          * Build scan queue from available post types.
          *
@@ -32,14 +32,14 @@
          */
         function buildScanQueue() {
             var queue = [];
-            
+
             // 1. Post Types
-            var postTypes = toolSeoHupuna.postTypes; 
+            var postTypes = toolSeoHupuna.postTypes;
             if (!Array.isArray(postTypes)) {
                 postTypes = Object.values(postTypes);
             }
-            
-            $.each(postTypes, function(i, type) {
+
+            $.each(postTypes, function (i, type) {
                 queue.push({
                     step: 'post_type',
                     sub_step: type,
@@ -47,45 +47,45 @@
                     label: toolSeoHupuna.strings.scanningPostType.replace('%s', type)
                 });
             });
-            
+
             // 2. Comments
-            queue.push({ 
-                step: 'comment', 
-                page: 1, 
-                label: toolSeoHupuna.strings.scanningComments 
+            queue.push({
+                step: 'comment',
+                page: 1,
+                label: toolSeoHupuna.strings.scanningComments
             });
-            
+
             // 3. Options
-            queue.push({ 
-                step: 'option', 
-                page: 1, 
-                label: toolSeoHupuna.strings.scanningOptions 
+            queue.push({
+                step: 'option',
+                page: 1,
+                label: toolSeoHupuna.strings.scanningOptions
             });
-            
+
             return queue;
         }
-        
+
         /**
          * Handle scan button click.
          */
-        $scanButton.on('click', function() {
+        $scanButton.on('click', function () {
             if (isScanning) {
                 return;
             }
-            
+
             isScanning = true;
             allResults = [];
             retryCount = 0;
             $scanButton.prop('disabled', true).html('<span class="dashicons dashicons-search"></span> ' + toolSeoHupuna.strings.scanning);
             $results.hide();
             $progressWrap.show();
-            
+
             scanQueue = buildScanQueue();
             totalStepsInitial = scanQueue.length;
-            
+
             processQueue();
         });
-        
+
         /**
          * Process scan queue recursively with error handling.
          */
@@ -94,16 +94,16 @@
                 finishScan();
                 return;
             }
-            
+
             var currentTask = scanQueue[0];
             var progressPercent = 100 - ((scanQueue.length / totalStepsInitial) * 100);
             if (progressPercent < 2) {
                 progressPercent = 2;
             }
-            
+
             var progressText = currentTask.label + ' (' + toolSeoHupuna.strings.page + ' ' + currentTask.page + ')';
             updateProgress(progressPercent, progressText);
-            
+
             $.ajax({
                 url: toolSeoHupuna.ajaxUrl,
                 type: 'POST',
@@ -115,45 +115,45 @@
                     sub_step: currentTask.sub_step || '',
                     page: currentTask.page
                 },
-                success: function(response) {
+                success: function (response) {
                     retryCount = 0; // Reset retry count on success
-                    
+
                     if (response.success) {
                         if (response.data.results && response.data.results.length > 0) {
                             allResults = allResults.concat(response.data.results);
                         }
-                        
+
                         if (response.data.done) {
                             scanQueue.shift(); // Task complete
                         } else {
                             scanQueue[0].page++; // Next page
                         }
-                        
+
                         // Use setTimeout to prevent browser hang
-                        setTimeout(function() {
+                        setTimeout(function () {
                             processQueue();
                         }, 10);
-                        
+
                     } else {
                         handleError(response.data.message || toolSeoHupuna.strings.error);
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     // Retry logic for transient errors
                     if (retryCount < maxRetries && (status === 'timeout' || xhr.status === 0)) {
                         retryCount++;
-                        setTimeout(function() {
+                        setTimeout(function () {
                             processQueue();
                         }, 1000 * retryCount); // Exponential backoff
                         return;
                     }
-                    
+
                     var errorMsg = toolSeoHupuna.strings.serverError.replace('%s', error || status);
                     handleError(errorMsg);
                 }
             });
         }
-        
+
         /**
          * Handle scan errors.
          *
@@ -166,7 +166,7 @@
             $scanButton.prop('disabled', false).html('<span class="dashicons dashicons-search"></span> ' + toolSeoHupuna.strings.startScan);
             $progressText.text(toolSeoHupuna.strings.errorEncountered);
         }
-        
+
         /**
          * Update progress bar and text.
          *
@@ -177,7 +177,7 @@
             $progressFill.css('width', percent + '%');
             $progressText.text(text);
         }
-        
+
         /**
          * Finish scan and display results.
          */
@@ -189,18 +189,18 @@
         }
 
         // --- UI & Display Logic ---
-        
+
         /**
          * Handle tab button clicks.
          */
-        $('.tsh-tab').on('click', function() {
+        $('.tsh-tab').on('click', function () {
             $('.tsh-tab').removeClass('nav-tab-active');
             $(this).addClass('nav-tab-active');
             currentTab = $(this).data('tab');
             currentPage = 1;
             renderCurrentPage();
         });
-        
+
         /**
          * Display scan results.
          *
@@ -208,85 +208,85 @@
          */
         function displayResults(data) {
             window.rawResults = data;
-            
+
             // Group by URL
             window.groupedResults = {};
-            $.each(data, function(i, item) {
+            $.each(data, function (i, item) {
                 if (!window.groupedResults[item.url]) {
                     window.groupedResults[item.url] = { url: item.url, occurrences: [] };
                 }
                 window.groupedResults[item.url].occurrences.push(item);
             });
-            
+
             $('#total-links').text(data.length);
             $('#unique-links').text(Object.keys(window.groupedResults).length);
-            
+
             $results.show();
             renderCurrentPage();
         }
-        
+
         /**
          * Render current page of results.
          */
         function renderCurrentPage() {
             var html = '';
             var list = [];
-            
+
             if (currentTab === 'grouped') {
                 list = Object.values(window.groupedResults);
             } else {
                 list = window.rawResults;
             }
-            
+
             if (list.length === 0) {
                 $resultsContent.html('<div class="notice notice-info"><p>' + escapeHtml(toolSeoHupuna.strings.noLinksFound) + '</p></div>');
                 return;
             }
-            
+
             // Client-side Pagination
             var totalItems = list.length;
             var totalPages = Math.ceil(totalItems / itemsPerPage);
             var start = (currentPage - 1) * itemsPerPage;
             var end = start + itemsPerPage;
             var pageItems = list.slice(start, end);
-            
+
             // Render List
             if (currentTab === 'grouped') {
-                $.each(pageItems, function(i, group) {
+                $.each(pageItems, function (i, group) {
                     html += '<div class="tsh-panel" style="margin-bottom: 20px;">';
                     html += '<h3>' + escapeHtml(group.url) + ' <span class="description">(' + group.occurrences.length + ' ' + (group.occurrences.length === 1 ? toolSeoHupuna.strings.occurrence : toolSeoHupuna.strings.occurrences) + ')</span></h3>';
                     html += '<table class="wp-list-table widefat fixed striped tsh-table">';
-                    html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th style="width: 150px;">Actions</th></tr></thead><tbody>';
-                    $.each(group.occurrences, function(j, item) {
+                    html += '<thead><tr><th>' + toolSeoHupuna.strings.type + '</th><th>' + toolSeoHupuna.strings.title + '</th><th>' + toolSeoHupuna.strings.locationHeader + '</th><th>' + toolSeoHupuna.strings.tag + '</th><th style="width: 150px;">' + toolSeoHupuna.strings.actions + '</th></tr></thead><tbody>';
+                    $.each(group.occurrences, function (j, item) {
                         html += renderItemRow(item);
                     });
                     html += '</tbody></table></div>';
                 });
             } else {
                 html += '<table class="wp-list-table widefat fixed striped tsh-table">';
-                html += '<thead><tr><th>Type</th><th>Title</th><th>Location</th><th>Tag</th><th style="width: 150px;">Actions</th></tr></thead><tbody>';
-                $.each(pageItems, function(i, item) {
+                html += '<thead><tr><th>' + toolSeoHupuna.strings.type + '</th><th>' + toolSeoHupuna.strings.title + '</th><th>' + toolSeoHupuna.strings.locationHeader + '</th><th>' + toolSeoHupuna.strings.tag + '</th><th style="width: 150px;">' + toolSeoHupuna.strings.actions + '</th></tr></thead><tbody>';
+                $.each(pageItems, function (i, item) {
                     html += renderItemRow(item);
                 });
                 html += '</tbody></table>';
             }
-            
+
             // Render Pagination
             if (totalPages > 1) {
                 html += '<div style="margin-top: 20px; text-align: center;">';
                 if (currentPage > 1) {
-                    html += '<button class="button" onclick="window.changeToolSeoHupunaPage(' + (currentPage - 1) + ')">' + escapeHtml(toolSeoHupuna.strings.prev) + '</button> ';
+                    html += '<button class="button" onclick="window.changeToolSeoHupunaPage(' + (currentPage - 1) + ')">' + toolSeoHupuna.strings.prev + '</button> ';
                 }
                 html += '<span>' + toolSeoHupuna.strings.page + ' ' + currentPage + ' ' + toolSeoHupuna.strings.of + ' ' + totalPages + '</span>';
                 if (currentPage < totalPages) {
-                    html += ' <button class="button" onclick="window.changeToolSeoHupunaPage(' + (currentPage + 1) + ')">' + escapeHtml(toolSeoHupuna.strings.next) + '</button>';
+                    html += ' <button class="button" onclick="window.changeToolSeoHupunaPage(' + (currentPage + 1) + ')">' + toolSeoHupuna.strings.next + '</button>';
                 }
                 html += '</div>';
             }
-            
+
             $resultsContent.html(html);
         }
-        
+
         /**
          * Render individual result item row.
          *
@@ -297,12 +297,12 @@
             // Security warning styling
             var riskStyle = '';
             var riskBadge = '';
-            
+
             if (item.is_safe === false) {
                 riskStyle = 'style="background-color: #ffe6e6;"';
                 riskBadge = '<span class="badge" style="background: #d63638; color: white; padding: 2px 5px; border-radius: 3px; font-size: 10px; margin-left: 5px; font-weight: normal;">⚠️ ' + escapeHtml(item.risk_type || toolSeoHupuna.strings.unsafe) + '</span>';
             }
-            
+
             var actionsHtml = '';
             if (item.edit_url || item.view_url) {
                 actionsHtml = '<div style="display: flex; gap: 5px; flex-wrap: wrap;">';
@@ -314,26 +314,33 @@
                 }
                 actionsHtml += '</div>';
             }
-            
+
+            var typeLabel = item.type;
+            if (toolSeoHupuna.strings[item.type]) {
+                typeLabel = toolSeoHupuna.strings[item.type];
+            } else if (window.toolSeoHupunaPostTypes && window.toolSeoHupunaPostTypes[item.type]) {
+                typeLabel = window.toolSeoHupunaPostTypes[item.type];
+            }
+
             return '<tr ' + riskStyle + '>' +
-                   '<td style="padding:6px;"><code>' + escapeHtml(item.type) + '</code></td>' +
-                   '<td style="padding:6px;"><strong>' + escapeHtml(item.title) + '</strong>' + riskBadge + '</td>' +
-                   '<td style="padding:6px;">' + escapeHtml(item.location) + '</td>' +
-                   '<td style="padding:6px;"><code>&lt;' + escapeHtml(item.tag) + '&gt;</code></td>' +
-                   '<td style="padding:6px; white-space: nowrap;">' + actionsHtml + '</td>' +
-                   '</tr>';
+                '<td style="padding:6px;"><code>' + escapeHtml(typeLabel) + '</code></td>' +
+                '<td style="padding:6px;"><strong>' + escapeHtml(item.title) + '</strong>' + riskBadge + '</td>' +
+                '<td style="padding:6px;">' + escapeHtml(item.location) + '</td>' +
+                '<td style="padding:6px;"><code>&lt;' + escapeHtml(item.tag) + '&gt;</code></td>' +
+                '<td style="padding:6px; white-space: nowrap;">' + actionsHtml + '</td>' +
+                '</tr>';
         }
-        
+
         /**
          * Global function to change page.
          *
          * @param {number} page Page number.
          */
-        window.changeToolSeoHupunaPage = function(page) {
+        window.changeToolSeoHupunaPage = function (page) {
             currentPage = page;
             renderCurrentPage();
         };
-        
+
         /**
          * Escape HTML to prevent XSS.
          *
@@ -351,8 +358,8 @@
                 '"': '&quot;',
                 "'": '&#039;'
             };
-            return text.replace(/[&<>"']/g, function(m) { 
-                return map[m]; 
+            return text.replace(/[&<>"']/g, function (m) {
+                return map[m];
             });
         }
     });

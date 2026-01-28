@@ -1,53 +1,51 @@
 # Tool SEO Hupuna
 
-Bộ công cụ SEO toàn diện giúp quản lý liên kết ngoại, chỉnh sửa hàng loạt giá sản phẩm WooCommerce và tối ưu hóa file robots.txt / llms.txt.
+Comprehensive SEO and content management tools for WordPress, including external link scanner, high-performance links in content manager (posts, products, categories), WooCommerce product manager, and keyword search. Now with robust plain-text URL detection and subdirectory-aware link classification.
 
-### Chức năng chính:
-- **Quản lý liên kết (External Link Scanner)**: Quét toàn bộ website để tìm và quản lý các liên kết trỏ ra ngoài, giúp tối ưu SEO và bảo mật.
-- **Quản lý giá sản phẩm (Product Price Manager)**: Chỉnh sửa tên, giá gốc và giá khuyến mãi của sản phẩm WooCommerce trực tiếp từ bảng admin, hỗ trợ cả sản phẩm biến thể.
-- **Quản lý Robots & LLMs**: Chỉnh sửa file `robots.txt` và `llms.txt` để kiểm soát cách công cụ tìm kiếm và AI bot thu thập dữ liệu website.
-- **Tối ưu hiệu suất**: Sử dụng câu lệnh SQL trực tiếp giúp tìm kiếm và xử lý dữ liệu nhanh gấp 20-50 lần so với phương pháp thông thường.
+### Key Features:
+- **External Link Scanner**: Scan your entire website to find and manage external links, optimizing SEO and security.
+- **Links in Posts**: Manage and edit links (internal and external) within your posts and pages directly from the admin panel.
+- **WooCommerce Product Manager**: Bulk edit product names, regular prices, and sale prices for WooCommerce products and variations.
+- **Keyword Search**: High-performance search across Products, News, and Categories with in-context highlighting.
+- **Performance Optimized**: Uses direct SQL queries for 20-50x faster data processing compared to standard WordPress methods.
 
-### Hướng dẫn sử dụng:
-1. Truy cập menu **Tool SEO** trong trang quản trị WordPress.
-2. Để quét liên kết: Chọn tab **Scanner** và nhấn nút bắt đầu quét.
-3. Để quản lý giá: Chọn tab **Product Manager**, tìm kiếm sản phẩm cần sửa và lưu thay đổi.
-4. Để chỉnh sửa robots.txt: Truy cập menu **Robots Manager** và lưu nội dung mới.
-
-## 📦 Về Hupuna Group
-
-**Công ty Cổ phần Hupuna Group** là đơn vị hàng đầu trong lĩnh vực **sản xuất và in ấn bao bì giấy, hộp carton chất lượng cao** tại Việt Nam.
-
-Chúng tôi chuyên cung cấp:  
-
-- 📦 **Hộp carton 3 lớp, 5 lớp, nắp cài, nắp âm dương**  
-
-- 🎨 **In logo – thiết kế hộp carton theo yêu cầu**  
-
-- 🏭 **Giải pháp đóng gói tối ưu cho doanh nghiệp, cửa hàng online và xuất khẩu**
-
-**Hupuna** cam kết mang đến **chất lượng bao bì tốt nhất, giá thành cạnh tranh và dịch vụ hỗ trợ tận tâm** — giúp doanh nghiệp nâng tầm thương hiệu qua từng chi tiết đóng gói.
+### How to Use:
+1. Navigate to the **Tool SEO** menu in your WordPress administrator dashboard.
+2. **Scanner**: Run a scan to find all external links and analyze their safety.
+3. **Links in Posts**: Find and update specific URLs across all your content.
+4. **Product Manager**: Quickly search and update your WooCommerce product information.
+5. **Keyword Search**: Search for any keyword across your entire content ecosystem.
 
 ---
 
-## 🌐 Thông tin liên hệ
+## 📦 About Hupuna Group
 
-**Công ty Cổ phần Hupuna Group**  
+**Hupuna Group Joint Stock Company** is a leading unit in the field of **production and printing of paper packaging, high-quality carton boxes** in Vietnam.
 
-📍 Địa chỉ: 119 Ngõ 83 Phố Vũ Đức Úy, Tân Triều, Thanh Trì, Hà Nội  
+We specialize in providing:
+- 📦 **3-layer, 5-layer carton boxes, tuck top, and lid-and-base boxes.**
+- 🎨 **Logo printing & custom carton box design.**
+- 🏭 **Optimal packaging solutions for businesses, online stores, and exports.**
 
-🌎 Website: [https://hupuna.com/hop-carton/](https://hupuna.com/hop-carton/)  
-
-📞 Hotline/Zalo: 0889 736 889  
-
-✉️ Email: [Ceohupuna@gmail.com](mailto:Ceohupuna@gmail.com)
+**Hupuna** is committed to bringing the **best packaging quality, competitive prices, and dedicated support services** — helping businesses elevate their brand through every packaging detail.
 
 ---
 
-## 🏷️ Hashtags SEO
+## 🌐 Contact Information
+
+**Hupuna Group Joint Stock Company**
+
+📍 **Address**: 119 Alley 83 Vu Duc Uy Street, Tan Trieu, Thanh Tri, Hanoi
+🌎 **Website**: [https://hupuna.com/hop-carton/](https://hupuna.com/hop-carton/)
+📞 **Hotline/Zalo**: 0889 736 889
+✉️ **Email**: [Ceohupuna@gmail.com](mailto:Ceohupuna@gmail.com)
+
+---
+
+## 🏷️ SEO Hashtags
 
 #HupunaGroup #phukiendonggoi #hopcarton #thungcarton #baobigiay #hopcartontheoyeucau #inlogothuonghieu #baobihupuna
 
 ---
 
-© 2025 [Hupuna Group](https://hupuna.com/) — All rights reserved.
+© 2026 [Hupuna Group](https://hupuna.com/) — All rights reserved.

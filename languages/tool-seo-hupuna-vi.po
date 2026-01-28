@@ -6,19 +6,24 @@ msgstr ""
 "Project-Id-Version: Tool SEO Hupuna 2.2.0\n"
 "Report-Msgid-Bugs-To: https://hupuna.com\n"
 "POT-Creation-Date: 2026-01-19 11:26+0700\n"
-"PO-Revision-Date: 2026-01-19 04:49+0000\n"
-"Last-Translator: MaiSyDat <contact@hupuna.com>\n"
+"PO-Revision-Date: 2026-01-28 04:16+0000\n"
+"Last-Translator: \n"
 "Language-Team: Tiếng Việt\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Loco https://localise.biz/"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.1; wp-6.9; php-8.2.12"
 
 #: includes/class-hupuna-products-manager.php
 msgid "%d prices updated successfully"
 msgstr "Đã cập nhật %d giá thành công"
+
+#: includes/class-hupuna-posts-manager.php
+msgid "(No anchor text)"
+msgstr "(Không có văn bản neo)"
 
 #: includes/class-hupuna-products-manager.php
 msgid "Access denied"
@@ -36,6 +41,10 @@ msgstr "Nội dung người lớn"
 msgid "All Types"
 msgstr "Tất cả Loại"
 
+#: includes/class-hupuna-keyword-search.php
+msgid "An error occurred."
+msgstr "Đã có lỗi xảy ra."
+
 #: includes/class-hupuna-posts-manager.php
 msgid "Are you sure you want to delete this post?"
 msgstr "Bạn có chắc muốn xóa bài viết này?"
@@ -48,9 +57,17 @@ msgstr "Bạn có chắc muốn xóa sản phẩm này?"
 msgid "CATEGORY"
 msgstr "DANH MỤC"
 
+#: includes/class-hupuna-posts-manager.php
+msgid "Category deleted"
+msgstr "Danh mục đã bị xóa"
+
 #: includes/class-hupuna-admin.php
 msgid "Clear Cache"
 msgstr "Xóa Cache"
+
+#: includes/class-hupuna-posts-manager.php
+msgid "Clear Search"
+msgstr "Xóa tìm kiếm"
 
 #: includes/class-hupuna-scanner.php
 msgid "Comment #%d"
@@ -59,6 +76,10 @@ msgstr "Bình luận #%d"
 #: includes/class-hupuna-scanner.php
 msgid "Content"
 msgstr "Nội dung"
+
+#: includes/class-hupuna-keyword-search.php
+msgid "Content Type"
+msgstr "Loại nội dung"
 
 #: includes/class-hupuna-scanner.php
 msgid "Cryptocurrency/Scam"
@@ -72,37 +93,61 @@ msgstr "Xóa"
 msgid "Edit"
 msgstr "Sửa"
 
-#: includes/class-hupuna-llms-manager.php
-msgid "Edit LLMs.txt"
-msgstr "Sửa LLMs.txt"
-
-#: includes/class-hupuna-robots-manager.php
-msgid "Edit Robots.txt"
-msgstr "Sửa Robots.txt"
-
-#: includes/class-hupuna-llms-manager.php
-msgid "Error saving LLMs.txt"
-msgstr "Lỗi khi lưu LLMs.txt"
-
-#: includes/class-hupuna-robots-manager.php
-msgid "Error saving robots.txt"
-msgstr "Lỗi khi lưu robots.txt"
+#: includes/class-hupuna-keyword-search.php
+msgid "Enter keyword to search..."
+msgstr "Nhập từ khóa cần tìm..."
 
 #: includes/class-hupuna-products-manager.php
 msgid "Error!"
 msgstr "Lỗi!"
 
-#: includes/class-hupuna-scanner.php
+#: includes/class-hupuna-posts-manager.php
 msgid "Excerpt"
 msgstr "Trích đoạn"
 
 #: includes/class-hupuna-posts-manager.php
 msgid "EXTERNAL"
-msgstr "NGOÀI"
+msgstr "LINK NGOÀI"
 
 #: includes/class-hupuna-admin.php
 msgid "External Link Scanner"
 msgstr "Quét Link Ngoài"
+
+#: includes/class-hupuna-scanner.php
+msgid "External Links"
+msgstr "Liên kết ngoài"
+
+#: includes/class-hupuna-scanner.php
+msgid "Scanning..."
+msgstr "Đang quét..."
+
+#: includes/class-hupuna-scanner.php
+msgid "Scan Completed!"
+msgstr "Quét hoàn tất!"
+
+#: includes/class-hupuna-scanner.php
+msgid "Start Scan"
+msgstr "Bắt đầu quét"
+
+#: includes/class-hupuna-scanner.php
+msgid "Initializing..."
+msgstr "Đang khởi tạo..."
+
+#: includes/class-hupuna-scanner.php
+msgid "Error encountered."
+msgstr "Đã xảy ra lỗi."
+
+#: includes/class-hupuna-scanner.php
+msgid "Scanning Post Type: %s"
+msgstr "Đang quét loại bài viết: %s"
+
+#: includes/class-hupuna-scanner.php
+msgid "Scanning Comments..."
+msgstr "Đang quét bình luận..."
+
+#: includes/class-hupuna-scanner.php
+msgid "Scanning Options..."
+msgstr "Đang quét tùy chọn..."
 
 #: includes/class-hupuna-posts-manager.php
 msgid "Failed to delete post"
@@ -136,21 +181,21 @@ msgstr "Lọc theo Loại"
 msgid "Invalid product ID"
 msgstr "ID sản phẩm không hợp lệ"
 
+#: includes/class-hupuna-keyword-search.php
+msgid "Keyword Search"
+msgstr "Tìm kiếm từ khóa"
+
+#: includes/class-hupuna-posts-manager.php
+msgid "Links in Content"
+msgstr "Link trong nội dung"
+
+#: includes/class-hupuna-posts-manager.php
+msgid "Links in Posts"
+msgstr "Link trong bài viết"
+
 #: includes/class-hupuna-posts-manager.php
 msgid "Links updated successfully"
 msgstr "Cập nhật links thành công"
-
-#: includes/class-hupuna-llms-manager.php
-msgid "LLMs.txt Content"
-msgstr "Nội dung LLMs.txt"
-
-#: includes/class-hupuna-llms-manager.php
-msgid "LLMs.txt Manager"
-msgstr "Quản lý LLMs.txt"
-
-#: includes/class-hupuna-llms-manager.php
-msgid "LLMs.txt saved successfully!"
-msgstr "Đã lưu LLMs.txt thành công!"
 
 #: includes/class-hupuna-products-manager.php
 msgid "Loading..."
@@ -164,6 +209,14 @@ msgstr "Vị trí"
 msgid "Malware/Hacker"
 msgstr "Phần mềm độc hại/Hacker"
 
+#: includes/class-hupuna-keyword-search.php
+msgid "News"
+msgstr "Tin tức"
+
+#: includes/class-hupuna-keyword-search.php
+msgid "News Category"
+msgstr "Danh mục tin tức"
+
 #: includes/class-hupuna-products-manager.php
 msgid "Next"
 msgstr "Sau"
@@ -172,13 +225,41 @@ msgstr "Sau"
 msgid "No external links found."
 msgstr "Không tìm thấy link ngoài."
 
+#: includes/class-hupuna-scanner.php
+msgid "No external links found. Great job!"
+msgstr "Không tìm thấy liên kết ngoài nào. Tuyệt vời!"
+
+#: includes/class-hupuna-scanner.php
+msgid "Total Links Found:"
+msgstr "Tổng số liên kết tìm thấy:"
+
+#: includes/class-hupuna-scanner.php
+msgid "Unique URLs:"
+msgstr "Số URL duy nhất:"
+
+#: includes/class-hupuna-scanner.php
+msgid "Grouped by URL"
+msgstr "Nhóm theo URL"
+
+#: includes/class-hupuna-scanner.php
+msgid "All Occurrences"
+msgstr "Tất cả lần xuất hiện"
+
+#: includes/class-hupuna-scanner.php
+msgid "Current Domain:"
+msgstr "Tên miền hiện tại:"
+
 #: includes/class-hupuna-posts-manager.php
 msgid "No posts found."
-msgstr "Không tìm thấy bài viết."
+msgstr "Không tìm thấy mục nào."
 
 #: includes/class-hupuna-products-manager.php
 msgid "No products found."
 msgstr "Không tìm thấy sản phẩm."
+
+#: includes/class-hupuna-keyword-search.php
+msgid "No results found."
+msgstr "Không tìm thấy kết quả nào."
 
 #: includes/class-hupuna-products-manager.php
 msgid "of"
@@ -193,12 +274,16 @@ msgid "Page"
 msgstr "Trang"
 
 #: includes/class-hupuna-posts-manager.php
-msgid "POST"
-msgstr "BÀI VIẾT"
+msgid "Paste URL to find posts containing this link..."
+msgstr "Dán URL để tìm các mục có chứa link này..."
+
+#: includes/class-hupuna-keyword-search.php
+msgid "Please enter a keyword."
+msgstr "Vui lòng nhập từ khóa."
 
 #: includes/class-hupuna-posts-manager.php
-msgid "Post Link Manager"
-msgstr "Quản lý Link Bài viết"
+msgid "POST"
+msgstr "BÀI VIẾT"
 
 #: includes/class-hupuna-posts-manager.php
 msgid "Post moved to trash"
@@ -207,10 +292,6 @@ msgstr "Đã chuyển bài viết vào thùng rác"
 #: includes/class-hupuna-scanner.php
 msgid "Potential Gambling/Spam"
 msgstr "Nghi cờ bạc/Spam"
-
-#: includes/class-hupuna-robots-manager.php
-msgid "Preview"
-msgstr "Xem trước"
 
 #: includes/class-hupuna-products-manager.php
 msgid "Previous"
@@ -223,6 +304,14 @@ msgstr "Cập nhật giá thành công"
 #: includes/class-hupuna-posts-manager.php
 msgid "PRODUCT"
 msgstr "SẢN PHẨM"
+
+#: includes/class-hupuna-keyword-search.php
+msgid "Product"
+msgstr "Sản phẩm"
+
+#: includes/class-hupuna-keyword-search.php
+msgid "Product Category"
+msgstr "Danh mục sản phẩm"
 
 #: includes/class-hupuna-products-manager.php
 msgid "Product deleted successfully"
@@ -240,18 +329,6 @@ msgstr "Cập nhật tên sản phẩm thành công"
 msgid "Regular Price"
 msgstr "Giá thường"
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Robots.txt Content"
-msgstr "Nội dung Robots.txt"
-
-#: includes/class-hupuna-robots-manager.php
-msgid "Robots.txt Manager"
-msgstr "Quản lý Robots.txt"
-
-#: includes/class-hupuna-robots-manager.php
-msgid "Robots.txt saved successfully!"
-msgstr "Đã lưu Robots.txt thành công!"
-
 #: includes/class-hupuna-admin.php
 msgid "Run a scan to find external links."
 msgstr "Chạy quét để tìm link ngoài."
@@ -267,10 +344,6 @@ msgstr "Lưu"
 #: includes/class-hupuna-products-manager.php
 msgid "Save All"
 msgstr "Lưu Tất cả"
-
-#: includes/class-hupuna-robots-manager.php
-msgid "Save Changes"
-msgstr "Lưu Thay đổi"
 
 #: includes/class-hupuna-posts-manager.php
 msgid "Save Links"
@@ -292,13 +365,19 @@ msgstr "Quét Ngay"
 msgid "Search"
 msgstr "Tìm kiếm"
 
+#: includes/class-hupuna-keyword-search.php
+msgid ""
+"Search in Products (WooCommerce), News (Posts), and Category descriptions."
+msgstr ""
+"Tìm kiếm trong Sản phẩm (WooCommerce), Tin tức (Posts) và Mô tả danh mục."
+
 #: includes/class-hupuna-products-manager.php
 msgid "Search products..."
 msgstr "Tìm sản phẩm..."
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Server error. Please try again."
-msgstr "Lỗi máy chủ. Vui lòng thử lại."
+#: includes/class-hupuna-keyword-search.php
+msgid "Searching..."
+msgstr "Đang tìm kiếm..."
 
 #: includes/class-hupuna-products-manager.php
 msgid "Simple"
@@ -312,6 +391,10 @@ msgstr "Sắp xếp theo"
 msgid "Spam/Pharmaceutical"
 msgstr "Spam/Dược phẩm"
 
+#: includes/class-hupuna-keyword-search.php
+msgid "Start Search"
+msgstr "Bắt đầu tìm kiếm"
+
 #: includes/class-hupuna-scanner.php
 msgid "Suspicious Pattern"
 msgstr "Mẫu đáng ngờ"
@@ -323,6 +406,10 @@ msgstr "Thẻ"
 #: includes/class-hupuna-admin.php
 msgid "Title"
 msgstr "Tiêu đề"
+
+#: includes/class-hupuna-keyword-search.php
+msgid "Title / Name"
+msgstr "Tiêu đề / Tên"
 
 #: includes/class-hupuna-admin.php
 msgid "Tool SEO"

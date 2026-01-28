@@ -2,10 +2,10 @@
 /**
  * Plugin Name: Tool SEO Hupuna
  * Plugin URI: https://hupuna.com
- * Description: Comprehensive SEO tools including external link scanner, posts with links manager, and WooCommerce product price manager.
- * Version: 2.2.0
+ * Description: Comprehensive SEO tools for WordPress, including external link scanner, posts manager, WooCommerce product manager, and keyword search.
+ * Version: 2.3.0
  * Author: MaiSyDat
- * Author URI: https://hupuna.com
+ * Author URI: https://github.com/MaiSyDat
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: tool-seo-hupuna
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Current plugin version.
  */
-define( 'TOOL_SEO_HUPUNA_VERSION', '2.2.0' );
+define( 'TOOL_SEO_HUPUNA_VERSION', '2.3.0' );
 
 /**
  * Plugin directory path.
@@ -47,12 +47,11 @@ define( 'TOOL_SEO_HUPUNA_CACHE_GROUP', 'tool_seo_hupuna' );
 define( 'TOOL_SEO_HUPUNA_CACHE_EXPIRATION', HOUR_IN_SECONDS );
 
 // Load core classes.
+require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-helper.php';
 require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-scanner.php';
-require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-admin.php';
 require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-posts-manager.php';
 require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-products-manager.php';
-require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-robots-manager.php';
-require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-llms-manager.php';
+require_once TOOL_SEO_HUPUNA_PLUGIN_DIR . 'includes/class-hupuna-keyword-search.php';
 
 /**
  * Initialize the plugin.
@@ -66,9 +65,8 @@ function tool_seo_hupuna_init() {
 		return;
 	}
 
-	// Initialize main admin controller.
-	$admin = new Hupuna_External_Link_Scanner_Admin();
-	$admin->init();
+	// Initialize features.
+	new Hupuna_External_Link_Scanner();
 
 	// Initialize feature managers (lazy loading - only when needed).
 	// Posts Manager.
@@ -79,11 +77,8 @@ function tool_seo_hupuna_init() {
 		new Hupuna_Products_Manager();
 	}
 
-	// Robots Manager.
-	new Hupuna_Robots_Manager();
-
-	// LLMs Manager.
-	new Hupuna_Llms_Manager();
+	// Keyword Search Manager.
+	new Hupuna_Keyword_Search();
 
 	/**
 	 * Fires after plugin initialization.
@@ -178,7 +173,7 @@ add_action( 'plugins_loaded', 'tool_seo_hupuna_load_textdomain' );
  * @return void
  */
 function tool_seo_hupuna_activate() {
-	// Flush rewrite rules to register llms.txt route.
+	// Flush rewrite rules.
 	flush_rewrite_rules();
 }
 register_activation_hook( __FILE__, 'tool_seo_hupuna_activate' );
@@ -204,14 +199,12 @@ register_deactivation_hook( __FILE__, 'tool_seo_hupuna_deactivate' );
  */
 function tool_seo_hupuna_clear_cache() {
 	// Clear site domain cache.
+	delete_transient( 'hupuna_site_domain' );
 	delete_transient( 'tool_seo_hupuna_site_domain' );
 	
 	// Clear post types cache.
 	delete_transient( 'tool_seo_hupuna_post_types' );
 	delete_transient( 'tool_seo_hupuna_public_post_types' );
-	
-	// Clear LLMs.txt content cache.
-	delete_transient( 'hupuna_llms_content' );
 	
 	/**
 	 * Fires after plugin cache is cleared.

@@ -2,22 +2,19 @@
 
 /* Scope all styles to plugin admin pages to prevent conflicts */
 body.toplevel_page_tool-seo-hupuna .tsh-wrap,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-wrap {
+body.tool-seo_page_tool-seo-hupuna-keyword-search .tsh-wrap {
 	margin-top: 20px;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-header,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-header {
+body.toplevel_page_tool-seo-hupuna .tsh-header {
 	margin-bottom: 20px;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-actions,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-actions {
+body.toplevel_page_tool-seo-hupuna .tsh-actions {
 	margin: 20px 0;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-progress-bar,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-progress-bar {
+body.toplevel_page_tool-seo-hupuna .tsh-progress-bar {
 	background: #f0f0f1;
 	border-radius: 4px;
 	height: 30px;
@@ -25,40 +22,34 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-progress-bar {
 	margin-bottom: 10px;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-progress-fill,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-progress-fill {
+body.toplevel_page_tool-seo-hupuna .tsh-progress-fill {
 	background: #2271b1;
 	height: 100%;
 	transition: width 0.3s;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-scan-results,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-scan-results {
+body.toplevel_page_tool-seo-hupuna .tsh-scan-results {
 	margin-top: 20px;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-results-summary,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-summary {
+body.toplevel_page_tool-seo-hupuna .tsh-results-summary {
 	margin-bottom: 20px;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-results-tabs,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-tabs {
+body.toplevel_page_tool-seo-hupuna .tsh-results-tabs {
 	margin-bottom: 20px;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-results-content,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-content {
+body.toplevel_page_tool-seo-hupuna .tsh-results-content {
 	margin-top: 20px;
 }
 
 /* Custom Panel Component - Replaces WordPress .card */
 /* Scoped to all plugin pages to prevent conflicts */
 body.toplevel_page_tool-seo-hupuna .tsh-panel,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel,
+body.tool-seo_page_tool-seo-hupuna-keyword-search .tsh-panel,
 body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel,
-body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel,
-body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel {
+body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel {
 	position: relative;
 	margin-top: 20px;
 	padding: 1.5em 2em;
@@ -72,15 +63,11 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel {
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-panel h2,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel h2,
 body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel h2,
 body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel h2,
-body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel h2,
 body.toplevel_page_tool-seo-hupuna .tsh-panel h3,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel h3,
 body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel h3,
-body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel h3,
-body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel h3 {
+body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel h3 {
 	margin-top: 0;
 	margin-bottom: 15px;
 	padding-bottom: 10px;
@@ -88,391 +75,216 @@ body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel h3 {
 }
 
 body.toplevel_page_tool-seo-hupuna .tsh-panel .description,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel .description,
 body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel .description,
-body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel .description,
-body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel .description {
+body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel .description {
 	margin-bottom: 15px;
 	color: #646970;
 }
 
 /* Full width results */
 body.toplevel_page_tool-seo-hupuna .tsh-results-content .tsh-panel,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-results-content .tsh-panel,
 body.toplevel_page_tool-seo-hupuna .tsh-panel,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel,
+body.tool-seo_page_tool-seo-hupuna-keyword-search .tsh-panel,
 body.tool-seo-hupuna_page_tool-seo-hupuna-posts-with-links .tsh-panel,
-body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel,
-body.tool-seo-hupuna_page_tool-seo-hupuna-robots .tsh-panel {
+body.tool-seo-hupuna_page_tool-seo-hupuna-product-prices .tsh-panel {
 	max-width: 100% !important;
 	width: 100% !important;
 	box-sizing: border-box;
 }
 
 /* Button Link Delete Style */
-body.toplevel_page_tool-seo-hupuna .tsh-button-link-delete,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-button-link-delete {
+body.toplevel_page_tool-seo-hupuna .tsh-button-link-delete {
 	color: #b32d2e !important;
 	border-color: #b32d2e !important;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-button-link-delete:hover,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-button-link-delete:hover {
+body.toplevel_page_tool-seo-hupuna .tsh-button-link-delete:hover {
 	background: #b32d2e !important;
 	color: #fff !important;
 	border-color: #b32d2e !important;
 }
 
 /* Search input improvements */
-body.toplevel_page_tool-seo-hupuna .tsh-panel p,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel p {
+body.toplevel_page_tool-seo-hupuna .tsh-panel p {
 	margin: 0;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-panel input[type="text"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel input[type="text"] {
+body.toplevel_page_tool-seo-hupuna .tsh-panel input[type="text"] {
 	margin-right: 10px;
 }
 
 /* Table action buttons */
-body.toplevel_page_tool-seo-hupuna .tsh-table td .button,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td .button {
+body.toplevel_page_tool-seo-hupuna .tsh-table td .button {
 	margin: 0;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-table td div[style*="display: flex"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td div[style*="display: flex"] {
+body.toplevel_page_tool-seo-hupuna .tsh-table td div[style*="display: flex"] {
 	align-items: center;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-table td div[style*="display: flex"] .button,
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td div[style*="display: flex"] .button {
+body.toplevel_page_tool-seo-hupuna .tsh-table td div[style*="display: flex"] .button {
 	flex-shrink: 0;
 }
 
 /* Actions column styling */
-body.toplevel_page_tool-seo-hupuna .tsh-table th[style*="width"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table th[style*="width"] {
+body.toplevel_page_tool-seo-hupuna .tsh-table th[style*="width"] {
 	white-space: nowrap;
 }
 
-body.toplevel_page_tool-seo-hupuna .tsh-table td[style*="white-space: nowrap"],
-body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table td[style*="white-space: nowrap"] {
+body.toplevel_page_tool-seo-hupuna .tsh-table td[style*="white-space: nowrap"] {
 	white-space: nowrap;
 }
 
 /* Responsive tables */
 @media screen and (max-width: 782px) {
-	body.toplevel_page_tool-seo-hupuna .tsh-table,
-	body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-table {
+
+	body.toplevel_page_tool-seo-hupuna .tsh-table {
 		display: block;
 		overflow-x: auto;
 		white-space: nowrap;
 	}
-	
-	body.toplevel_page_tool-seo-hupuna .tsh-panel input[type="text"],
-	body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel input[type="text"] {
+
+	body.toplevel_page_tool-seo-hupuna .tsh-panel input[type="text"] {
 		width: 100% !important;
 		max-width: 100% !important;
 		margin-right: 0;
 		margin-bottom: 10px;
 	}
-	
-	body.toplevel_page_tool-seo-hupuna .tsh-panel .button,
-	body.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel .button {
+
+	body.toplevel_page_tool-seo-hupuna .tsh-panel .button {
 		width: 100%;
 		margin-bottom: 5px;
 	}
 }
 
-/* LLMs.txt Manager Full Width Styles - Override WordPress Defaults */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .wrap {
-	max-width: 100% !important;
-	width: 100% !important;
-	padding: 0 20px !important;
+
+/* Keyword Search Styles */
+.tool-seo_page_tool-seo-hupuna-keyword-search .tsh-excerpt mark {
+	background-color: #fff8bb;
+	border-bottom: 1px solid #ffe400;
+	padding: 2px 0;
+	color: #000;
 }
 
-/* LLMs.txt Manager - Custom Panel Styles */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .tsh-panel {
-	max-width: 100% !important;
-	width: 100% !important;
-	box-sizing: border-box !important;
+.tool-seo_page_tool-seo-hupuna-keyword-search #hupuna-search-input {
+	height: 40px;
+	padding: 0 15px;
+	border-radius: 4px;
+	font-size: 14px;
+	width: 400px;
+	max-width: 100%;
 }
 
-/* Links Container */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-container {
-	width: 100% !important;
-	overflow-x: auto !important;
-	margin-top: 15px !important;
+.tool-seo_page_tool-seo-hupuna-keyword-search #hupuna-search-btn {
+	height: 40px;
+	padding: 0 20px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
 }
 
-/* Table Styles - Override WordPress defaults */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat {
-	width: 100% !important;
-	max-width: 100% !important;
-	border-collapse: collapse !important;
-	margin: 0 !important;
-	background: #fff !important;
+.tool-seo_page_tool-seo-hupuna-keyword-search #hupuna-search-btn .dashicons.spin {
+	animation: tsh-spin 1s linear infinite;
 }
 
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table thead {
-	background: #f6f7f7 !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table th {
-	padding: 15px 20px !important;
-	text-align: left !important;
-	font-weight: 600 !important;
-	border-bottom: 2px solid #c3c4c7 !important;
-	background: #f6f7f7 !important;
-}
-
-/* Override WordPress .widefat default padding - MUST override .widefat td { padding: 8px 10px; } */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat td,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat.fixed td,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat.striped td,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table td {
-	padding: 20px 25px !important;
-	border-bottom: 1px solid #ddd !important;
-	vertical-align: middle !important;
-	background: #fff !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat td.sort-handle,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat.fixed td.sort-handle,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat.striped td.sort-handle,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table td.sort-handle {
-	padding: 20px 15px !important;
-	text-align: center !important;
-	width: 50px !important;
-	min-width: 50px !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat td:last-child,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat.fixed td:last-child,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table.widefat.striped td:last-child,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table td:last-child {
-	padding: 20px 15px !important;
-	text-align: center !important;
-	width: 100px !important;
-	min-width: 100px !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table tbody tr:hover {
-	background: #f9f9f9 !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table tbody tr:last-child td {
-	border-bottom: none !important;
-}
-
-/* Input fields in table */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-tbody input[type="text"],
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-tbody input[type="url"] {
-	width: 100% !important;
-	max-width: 100% !important;
-	min-width: 150px !important;
-	padding: 10px 14px !important;
-	margin: 0 !important;
-	border: 1px solid #8c8f94 !important;
-	border-radius: 4px !important;
-	box-sizing: border-box !important;
-	display: block !important;
-	font-size: 14px !important;
-	line-height: 1.5 !important;
-}
-
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-tbody input[type="text"]:focus,
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-tbody input[type="url"]:focus {
-	border-color: #2271b1 !important;
-	box-shadow: 0 0 0 1px #2271b1 !important;
-	outline: none !important;
-}
-
-/* Sort Handle */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .sort-handle {
-	cursor: move !important;
-	text-align: center !important;
-	width: 30px !important;
-	padding: 0 !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .sort-handle .dashicons {
-	vertical-align: middle !important;
-	color: #646970 !important;
-	font-size: 20px !important;
-	width: 20px !important;
-	height: 20px !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .sort-handle:hover .dashicons {
-	color: #2271b1 !important;
-}
-
-/* Sortable Helper (dragging) */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .llms-link-row.ui-sortable-helper {
-	background: #fff !important;
-	box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-	border: 1px solid #2271b1 !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .llms-link-row.ui-sortable-placeholder {
-	background: #f0f0f1 !important;
-	border: 2px dashed #c3c4c7 !important;
-	height: 50px !important;
-	visibility: visible !important;
-}
-
-/* Buttons */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #add-link-row {
-	margin-top: 15px !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .delete-link-row {
-	color: #b32d2e !important;
-	text-decoration: none !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .delete-link-row:hover {
-	color: #d63638 !important;
-	text-decoration: underline !important;
-}
-
-/* Form Table Override */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .form-table {
-	width: 100% !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .form-table th {
-	width: 200px !important;
-	padding: 15px 10px 15px 0 !important;
-	vertical-align: middle !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .form-table td {
-	padding: 15px 10px !important;
-	vertical-align: middle !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .form-table input[type="text"],
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .form-table input[type="url"],
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .form-table input[type="number"],
-.tool-seo-hupuna_page_tool-seo-hupuna-llms .form-table textarea {
-	width: 100% !important;
-	max-width: 100% !important;
-	box-sizing: border-box !important;
-	margin: 0 !important;
-	padding: 8px 12px !important;
-}
-
-/* Section Order Sortable */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable {
-	min-height: 50px;
-	position: relative;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable li {
-	position: relative;
-	transition: all 0.3s ease;
-	transform: translateZ(0);
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable li.ui-sortable-helper {
-	box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
-	border: 2px solid #2271b1 !important;
-	background: #fff !important;
-	transform: rotate(2deg) scale(1.02) !important;
-	z-index: 1000 !important;
-	opacity: 0.95 !important;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable .ui-sortable-placeholder {
-	background: linear-gradient(135deg, #f0f0f1 0%, #e5e5e5 100%) !important;
-	border: 2px dashed #2271b1 !important;
-	height: 50px !important;
-	visibility: visible !important;
-	margin: 5px 0 !important;
-	border-radius: 4px !important;
-	position: relative;
-	animation: pulse-placeholder 1.5s ease-in-out infinite;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable .ui-sortable-placeholder::before {
-	content: '↓ Drop here';
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	color: #2271b1;
-	font-size: 12px;
-	font-weight: 600;
-	opacity: 0.7;
-}
-
-@keyframes pulse-placeholder {
-	0%, 100% {
-		opacity: 0.6;
-		border-color: #2271b1;
-	}
-	50% {
-		opacity: 1;
-		border-color: #135e96;
-	}
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable .dashicons-move {
-	cursor: move !important;
-	transition: all 0.2s ease;
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable li:hover {
-	background: #f0f6fc !important;
-	transform: translateX(5px);
-	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable li:hover .dashicons-move {
-	color: #2271b1 !important;
-	transform: scale(1.2);
-}
-
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable li.ui-sortable-helper .dashicons-move {
-	color: #2271b1 !important;
-	animation: spin-icon 0.5s linear infinite;
-}
-
-@keyframes spin-icon {
-	0% {
+@keyframes tsh-spin {
+	from {
 		transform: rotate(0deg);
 	}
-	100% {
+
+	to {
 		transform: rotate(360deg);
 	}
 }
 
-/* Smooth transition when items move */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable li:not(.ui-sortable-helper) {
-	transition: transform 0.3s ease, background-color 0.2s ease;
+.tool-seo_page_tool-seo-hupuna-keyword-search .tsh-excerpt {
+	color: #646970;
+	font-style: italic;
+	line-height: 1.5;
+	font-size: 13px;
+}/* Product Manager Styles */
+
+.tsh-product-card {
+    background: #fff;
+    border: 1px solid #096484;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
-/* Active sorting states */
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable li.sorting-active {
-	z-index: 1000;
+.tsh-product-header {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e5e5e5;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
 }
 
-.tool-seo-hupuna_page_tool-seo-hupuna-llms #section-order-sortable li.sorting-other {
-	opacity: 0.7;
+.tsh-product-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 14px;
 }
 
-/* Responsive */
-@media screen and (max-width: 782px) {
-	.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-container {
-		overflow-x: scroll !important;
-	}
-	
-	.tool-seo-hupuna_page_tool-seo-hupuna-llms #llms-links-table {
-		min-width: 600px !important;
-	}
+.tsh-product-name textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    resize: vertical;
+}
+
+.tsh-product-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tsh-variant-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tsh-variant-table thead {
+    background: #fafafa;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.tsh-variant-table thead th {
+    padding: 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    color: #555;
+}
+
+.tsh-variant-table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+.tsh-variant-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.tsh-variant-table tr:last-child td {
+    border-bottom: none;
+}
+
+#tsh-products-container {
+    margin-top: 20px;
+}
+
+.tsh-products-loading,
+.tsh-products-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: #666;
+    background: #f9f9f9;
+    border-radius: 6px;
 }

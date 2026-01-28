@@ -258,7 +258,7 @@ msgid "Failed to delete product"
 msgstr ""
 
 #: includes/class-hupuna-posts-manager.php
-msgid "Post Link Manager"
+msgid "Links in Posts"
 msgstr ""
 
 #: includes/class-hupuna-posts-manager.php
@@ -290,6 +290,30 @@ msgid "View Link"
 msgstr ""
 
 #: includes/class-hupuna-posts-manager.php
+msgid "Clear Search"
+msgstr ""
+
+#: includes/class-hupuna-posts-manager.php
+msgid "Links in Content"
+msgstr ""
+
+#: includes/class-hupuna-posts-manager.php
+msgid "Paste URL to find posts containing this link..."
+msgstr ""
+
+#: includes/class-hupuna-posts-manager.php
+msgid "(No anchor text)"
+msgstr ""
+
+#: includes/class-hupuna-posts-manager.php
+msgid "Excerpt"
+msgstr ""
+
+#: includes/class-hupuna-posts-manager.php
+msgid "Category deleted"
+msgstr ""
+
+#: includes/class-hupuna-posts-manager.php
 msgid "Save Links"
 msgstr ""
 
@@ -313,54 +337,60 @@ msgstr ""
 msgid "Failed to delete post"
 msgstr ""
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Robots.txt Manager"
+
+
+#: includes/class-hupuna-keyword-search.php
+msgid "Keyword Search"
 msgstr ""
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Edit Robots.txt"
+#: includes/class-hupuna-keyword-search.php
+msgid "Searching..."
 msgstr ""
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Robots.txt Content"
+#: includes/class-hupuna-keyword-search.php
+msgid "No results found."
 msgstr ""
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Save Changes"
+#: includes/class-hupuna-keyword-search.php
+msgid "An error occurred."
 msgstr ""
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Preview"
+#: includes/class-hupuna-keyword-search.php
+msgid "Enter keyword to search..."
 msgstr ""
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Robots.txt saved successfully!"
+#: includes/class-hupuna-keyword-search.php
+msgid "Start Search"
 msgstr ""
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Error saving robots.txt"
+#: includes/class-hupuna-keyword-search.php
+msgid "Search in Products (WooCommerce), News (Posts), and Category descriptions."
 msgstr ""
 
-#: includes/class-hupuna-robots-manager.php
-msgid "Server error. Please try again."
+#: includes/class-hupuna-keyword-search.php
+msgid "Content Type"
 msgstr ""
 
-#: includes/class-hupuna-llms-manager.php
-msgid "LLMs.txt Manager"
+#: includes/class-hupuna-keyword-search.php
+msgid "Title / Name"
 msgstr ""
 
-#: includes/class-hupuna-llms-manager.php
-msgid "Edit LLMs.txt"
+#: includes/class-hupuna-keyword-search.php
+msgid "Please enter a keyword."
 msgstr ""
 
-#: includes/class-hupuna-llms-manager.php
-msgid "LLMs.txt Content"
+#: includes/class-hupuna-keyword-search.php
+msgid "Product"
 msgstr ""
 
-#: includes/class-hupuna-llms-manager.php
-msgid "LLMs.txt saved successfully!"
+#: includes/class-hupuna-keyword-search.php
+msgid "News"
 msgstr ""
 
-#: includes/class-hupuna-llms-manager.php
-msgid "Error saving LLMs.txt"
+#: includes/class-hupuna-keyword-search.php
+msgid "Product Category"
+msgstr ""
+
+#: includes/class-hupuna-keyword-search.php
+msgid "News Category"
 msgstr ""
